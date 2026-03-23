@@ -1,0 +1,3002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Site Visit Checklist — Frontier Towers Associates Philippines</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #020c1b; color: #f1f5f9; min-height: 100vh; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: #020c1b;
+  }
+
+  /* Animated background orbs */
+  #login-screen::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10,37,80,0.9) 0%, rgba(2,12,27,0) 70%);
+    top: -150px; left: -150px;
+    animation: orb1 12s ease-in-out infinite alternate;
+  }
+  #login-screen::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(150,10,30,0.35) 0%, rgba(2,12,27,0) 70%);
+    bottom: -100px; right: -100px;
+    animation: orb2 10s ease-in-out infinite alternate;
+  }
+  @keyframes orb1 { from { transform: translate(0,0) scale(1); } to { transform: translate(60px,40px) scale(1.1); } }
+  @keyframes orb2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-40px,-60px) scale(1.15); } }
+
+  /* Grid lines overlay */
+  .login-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+  }
+
+  /* Glass card */
+  .login-card {
+    position: relative;
+    z-index: 10;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 44px 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.05) inset,
+      0 20px 60px rgba(0,0,0,0.5),
+      0 0 80px rgba(150,10,30,0.08);
+  }
+
+  /* Badge */
+  .login-badge {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #a30000, #cc1a1a);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: #fff;
+    margin: 0 auto 18px;
+    box-shadow: 0 4px 20px rgba(180,0,0,0.4);
+    letter-spacing: 1px;
+  }
+
+  .login-logo { text-align: center; margin-bottom: 28px; }
+  .login-logo h2 {
+    font-size: 17px; font-weight: 600;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 0.3px; margin-bottom: 4px;
+  }
+  .login-logo p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  /* Divider */
+  .login-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .login-divider::before, .login-divider::after {
+    content: ''; flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+  .login-divider span {
+    font-size: 10px; color: rgba(255,255,255,0.3);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* Fields */
+  .login-field { margin-bottom: 16px; }
+  .login-field label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    display: block; margin-bottom: 7px;
+    font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .login-field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    font-size: 14px; font-family: inherit;
+    outline: none;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.9);
+    transition: all 0.2s;
+  }
+  .login-field input::placeholder { color: rgba(255,255,255,0.2); }
+  .login-field input:focus {
+    border-color: rgba(180,20,20,0.7);
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 3px rgba(180,20,20,0.15);
+  }
+
+  /* Button */
+  .login-btn {
+    width: 100%; margin-top: 8px;
+    background: linear-gradient(135deg, #a30000 0%, #cc1a1a 100%);
+    color: #fff; border: none;
+    border-radius: 10px; padding: 13px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(180,0,0,0.35);
+  }
+  .login-btn:hover {
+    background: linear-gradient(135deg, #b30000 0%, #dd2020 100%);
+    box-shadow: 0 6px 24px rgba(180,0,0,0.5);
+    transform: translateY(-1px);
+  }
+  .login-btn:active { transform: translateY(0); }
+
+  /* Hint & version */
+  .login-hint {
+    font-size: 11px; text-align: center;
+    margin-top: 12px; min-height: 16px;
+    color: rgba(255,80,80,0.9);
+  }
+  .login-version {
+    text-align: center; margin-top: 20px;
+    font-size: 10px; color: rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 768px) {
+    .login-card { padding: 36px 26px 30px; border-radius: 20px; }
+  }
+
+  /* ── APP SHELL ── */
+  #main-app { display: none; min-height: 100vh; flex-direction: column; }
+  .topbar { background: rgba(10,20,40,0.97); border-bottom: 1px solid rgba(255,255,255,0.07); color: #fff; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 54px; flex-shrink: 0; }
+  .topbar-brand { display: flex; align-items: center; gap: 10px; }
+  .topbar-logo { width: 32px; height: 32px; background: linear-gradient(135deg,#a30000,#cc1a1a); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12px; color: #fff; box-shadow: 0 2px 8px rgba(180,0,0,0.4); }
+  .topbar-title { font-size: 14px; font-weight: 600; }
+  .topbar-sub { font-size: 10px; color: rgba(255,255,255,0.65); font-size: 11px; letter-spacing: 0.5px; }
+  .topbar-user { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .avatar-sm { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,#a30000,#cc1a1a); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+  .signout-btn { background: none; border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: inherit; }
+  .signout-btn:hover { background: rgba(255,255,255,0.1); }
+  .nav { background: rgba(5,15,35,0.95); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; gap: 2px; padding: 0 16px; flex-shrink: 0; overflow-x: auto; }
+  .nav-btn { padding: 11px 16px; font-size: 13px; color: rgba(255,255,255,0.7); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+  .nav-btn.active { color: #ff4444; border-bottom-color: #ff4444; font-weight: 600; }
+  .nav-btn:hover { color: #fff; }
+  .app-body { flex: 1; padding: 20px; overflow-y: auto; }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── CARDS & LAYOUT ── */
+  .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 18px; margin-bottom: 16px; }
+  .section-label { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 1px; margin-bottom: 12px; text-transform: uppercase; }
+
+  /* ── STAT CARDS ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .stat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; }
+  .stat-label { font-size: 11px; color: rgba(255,255,255,0.65); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .stat-value { font-size: 26px; font-weight: 700; line-height: 1; }
+  .c-blue { color: #60a5fa; } .c-green { color: #4ade80; } .c-amber { color: #fbbf24; } .c-red { color: #f87171; } .c-gray { color: #94a3b8; }
+
+  /* ── INSPECTION SUMMARY ── */
+  .insp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+  .insp-box { border-radius: 12px; padding: 16px; text-align: center; }
+  .insp-box.ok { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); } .insp-box.notok { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.2); } .insp-box.na { background: rgba(148,163,184,0.1); }
+  .insp-box .n { font-size: 32px; font-weight: 700; }
+  .insp-box.ok .n { color: #4ade80; } .insp-box.notok .n { color: #f87171; } .insp-box.na .n { color: #94a3b8; }
+  .insp-box .l { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; }
+  .insp-box.ok .l { color: #4ade80; } .insp-box.notok .l { color: #f87171; } .insp-box.na .l { color: #94a3b8; }
+
+  /* ── TABLES ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th { font-size: 10px; color: rgba(255,255,255,0.7); font-weight: 700; letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); cursor: pointer; white-space: nowrap; user-select: none; }
+  .data-table th:hover { color: rgba(255,255,255,0.7); }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; color: #f1f5f9; font-size: 13px; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.03); }
+
+  /* ── BADGES ── */
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 11px; font-weight: 600; }
+  .badge-ok { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.25); }
+  .badge-notok { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+  .badge-na { background: #F1EFE8; color: #5F5E5A; }
+
+  /* ── TOOLBAR ── */
+  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .search-box { flex: 1; min-width: 200px; position: relative; }
+  .search-box input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 12px; font-family: inherit; outline: none; background: #0d1b2e; color: #f1f5f9; }
+  .search-box input:focus { border-color: rgba(204,26,26,0.7); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 13px; pointer-events: none; }
+  .filter-sel { padding: 8px 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 12px; font-family: inherit; outline: none; background: #0d1b2e; color: #f1f5f9; }
+  .filter-sel:focus { border-color: #cc1a1a; }
+  .filter-sel option { background: #0d1b2e; color: #f1f5f9; }
+  .btn-sm { padding: 8px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 12px; background: #0d1b2e; cursor: pointer; color: #f1f5f9; font-family: inherit; }
+  .btn-sm:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+
+  /* ── SUMMARY CHIPS ── */
+  .summary-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .chip { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .chip-total { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.25); }
+  .chip-ok { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+  .chip-notok { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+  .chip-na { background: #F1EFE8; color: #5F5E5A; }
+
+  /* ── PAGINATION ── */
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 0 0; border-top: 1px solid rgba(255,255,255,0.07); margin-top: 4px; }
+  .page-info { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .page-btns { display: flex; gap: 4px; align-items: center; }
+  .page-btn { width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; background: rgba(255,255,255,0.04); cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-family: inherit; }
+  .page-btn.active { background: #a30000; color: #fff; border-color: #a30000; }
+  .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* ── PROGRESS BARS ── */
+  .prog-wrap { display: flex; align-items: center; gap: 8px; }
+  .prog-bar { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; flex: 1; min-width: 60px; }
+  .prog-fill { height: 100%; background: linear-gradient(90deg,#a30000,#cc1a1a); border-radius: 3px; }
+  .prog-pct { font-size: 11px; color: rgba(255,255,255,0.35); width: 32px; text-align: right; }
+
+  /* ── SUBMIT FORM ── */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .field-row.full { grid-template-columns: 1fr; }
+  .field label { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 600; display: block; margin-bottom: 5px; letter-spacing: 0.3px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 9px 12px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #0d1b2e; color: #f1f5f9; transition: border 0.15s; }
+  .field input::placeholder, .field textarea::placeholder { color: rgba(255,255,255,0.3); }
+  select, select option { background: #0d1b2e !important; color: #f1f5f9 !important; }
+  .field select option { background: #0d1b2e; color: #f1f5f9; }
+  .field input[readonly] { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.45); cursor: default; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: rgba(204,26,26,0.7); box-shadow: 0 0 0 3px rgba(163,0,0,0.12); }
+  .other-input { margin-top: 6px !important; width: 100%; padding: 9px 12px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; background: #0d1b2e; color: #f1f5f9; transition: border 0.15s; }
+  .other-input:focus { border-color: rgba(204,26,26,0.7); }
+  .form-section-title { font-size: 13px; font-weight: 700; color: #cc1a1a; letter-spacing: 1.5px; text-transform: uppercase; padding: 14px 0 10px; border-bottom: 1px solid rgba(204,26,26,0.2); margin-bottom: 8px; }
+  .q-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f8f8f8; }
+  .q-num { font-size: 12px; color: rgba(255,255,255,0.55); min-width: 24px; padding-top: 3px; font-weight: 600; }
+  .q-text { font-size: 14px; flex: 1; line-height: 1.6; color: #f1f5f9; font-weight: 500; }
+  .q-options { display: flex; gap: 6px; flex-shrink: 0; }
+  .q-opt { padding: 5px 11px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); cursor: pointer; transition: all 0.12s; color: rgba(255,255,255,0.8); font-family: inherit; }
+  .q-opt:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .q-opt.sel-ok { background: rgba(74,222,128,0.15); border-color: rgba(74,222,128,0.4); color: #4ade80; }
+  .q-opt.sel-notok { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: #f87171; }
+  .q-opt.sel-na { background: #F1EFE8; border-color: #aaa; color: #5F5E5A; }
+  .progress-track { background: rgba(255,255,255,0.08); border-radius: 6px; height: 7px; margin-bottom: 8px; overflow: hidden; }
+  .progress-track-fill { height: 100%; background: linear-gradient(90deg,#a30000,#cc1a1a); border-radius: 6px; transition: width 0.3s; }
+  .progress-label { font-size: 12px; color: rgba(255,255,255,0.65); margin-bottom: 16px; }
+
+  /* ── PHOTO ZONE ── */
+  .photo-zone { border: 2px dashed #ddd; border-radius: 12px; padding: 22px; text-align: center; cursor: pointer; background: #fafafa; transition: border-color 0.15s; }
+  .photo-zone:hover { border-color: #185FA5; }
+  .photo-icon { font-size: 26px; margin-bottom: 6px; }
+  .photo-zone p { font-size: 13px; font-weight: 600; color: #555; }
+  .photo-zone span { font-size: 11px; color: #aaa; }
+  .photo-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .photo-thumb { width: 64px; height: 64px; border-radius: 8px; background: #eee; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-del { position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: rgba(0,0,0,0.55); border-radius: 50%; color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+  /* ── OVERALL RESULT ── */
+  .overall-opts { display: flex; gap: 12px; margin-top: 10px; }
+  .overall-btn { padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); cursor: pointer; transition: all 0.12s; font-family: inherit; color: rgba(255,255,255,0.85); }
+  .overall-btn.sel-ok { background: rgba(74,222,128,0.15); border-color: rgba(74,222,128,0.4); color: #4ade80; }
+  .overall-btn.sel-notok { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.4); color: #f87171; }
+  .overall-btn.sel-na { background: #F1EFE8; border-color: #aaa; color: #5F5E5A; }
+
+  /* ── BUTTONS ── */
+  .btn-primary { background: linear-gradient(135deg,#a30000,#cc1a1a); box-shadow: 0 4px 14px rgba(163,0,0,0.3); color: #fff; border: none; border-radius: 8px; padding: 11px 26px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+  .btn-primary:hover { background: linear-gradient(135deg,#b30000,#dd2020); transform: translateY(-1px); }
+  .btn-secondary { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 11px 20px; font-size: 13px; cursor: pointer; font-family: inherit; }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+  .btn-export { background: linear-gradient(135deg,#a30000,#cc1a1a); color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn-export:hover { background: linear-gradient(135deg,#b30000,#dd2020); }
+  .submit-bar { display: flex; align-items: center; justify-content: space-between; padding: 16px 0 0; border-top: 1px solid rgba(255,255,255,0.07); margin-top: 8px; }
+
+  /* ── REPORTS LIST ── */
+  .report-row { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+  .report-row:last-child { border-bottom: none; } /* dark */
+  .report-meta { flex: 1; }
+  .report-meta strong { display: block; font-size: 13px; font-weight: 600; }
+  .report-meta span { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+  /* ── EXTRACT ── */
+  .export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .export-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.04); }
+  .export-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .export-card p { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6; margin-bottom: 14px; }
+  .export-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
+  .prog-inline-wrap { margin-bottom: 10px; display: none; }
+  .prog-inline { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+  .prog-inline-fill { height: 100%; background: linear-gradient(90deg,#a30000,#cc1a1a); transition: width 0.4s; }
+  .prog-inline-lbl { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+  /* ── PERF LIST ── */
+  .perf-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f5f5f5; }
+  .perf-row:last-child { border-bottom: none; } /* dark */
+  .perf-name { width: 150px; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .perf-visited { font-size: 12px; color: #4ade80; font-weight: 700; width: 36px; text-align: right; }
+
+  /* ── MONTH GRID ── */
+  .month-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 16px; }
+  .month-cell { border: 1px solid rgba(255,255,255,0.07); border-radius: 9px; padding: 10px 6px; text-align: center; background: rgba(255,255,255,0.03); }
+  .month-cell.has-data { cursor: pointer; }
+  .month-cell.has-data:hover { border-color: rgba(204,26,26,0.5); background: rgba(163,0,0,0.08); }
+  .month-cell.current { background: rgba(163,0,0,0.12); border-color: rgba(204,26,26,0.35); }
+  .month-name { font-size: 11px; color: rgba(255,255,255,0.65); font-weight: 600; }
+  .month-count { font-size: 18px; font-weight: 700; color: #cc1a1a; margin-top: 2px; }
+
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: rgba(10,20,40,0.95); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 12px 24px; border-radius: 10px; font-size: 13px; font-weight: 500; display: none; z-index: 9999; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+
+  /* ── RESPONSIVE / MOBILE ── */
+  @media (max-width: 768px) {
+    /* Login */
+    .login-card { padding: 32px 22px 28px; border-radius: 20px; }
+
+    /* Topbar */
+    .topbar { padding: 0 14px; height: 50px; }
+    .topbar-title { font-size: 13px; }
+    .topbar-sub { display: none; }
+    .topbar-user span:not(.avatar-sm) { display: none; }
+
+    /* Nav — horizontal scrollable strip */
+    .nav { padding: 0 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 10px 12px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+
+    /* App body */
+    .app-body { padding: 12px; }
+
+    /* Cards */
+    .card { padding: 14px; border-radius: 10px; margin-bottom: 12px; }
+
+    /* Form fields — always single column on mobile */
+    .field-row { grid-template-columns: 1fr !important; gap: 10px; }
+    .field-row.full { grid-template-columns: 1fr; }
+    .field label { font-size: 11px; }
+    .field input, .field select, .field textarea { font-size: 14px; padding: 10px 12px; }
+
+    /* Stat grid */
+    .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-value { font-size: 22px; }
+
+    /* Inspection boxes */
+    .insp-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .insp-box .n { font-size: 26px; }
+
+    /* Month grid */
+    .month-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .month-count { font-size: 16px; }
+
+    /* Tables — horizontal scroll */
+    .card > .data-table,
+    div[style*="padding:0 16px"] { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .data-table { font-size: 12px; min-width: 520px; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+
+    /* Toolbar filters — wrap & full width search */
+    .toolbar { gap: 6px; }
+    .search-box { min-width: 100%; order: -1; }
+    .filter-sel { font-size: 12px; flex: 1; min-width: calc(50% - 6px); }
+
+    /* Summary chips */
+    .summary-row { gap: 4px; }
+    .chip { font-size: 10px; padding: 3px 8px; }
+
+    /* Question blocks */
+    .q-block { padding: 12px !important; }
+    .q-block > div[style*="grid"] { grid-template-columns: 1fr !important; }
+
+    /* Overall result buttons */
+    .overall-opts { gap: 8px; }
+    .overall-btn { flex: 1; padding: 12px 8px; font-size: 13px; }
+
+    /* Submit bar */
+    .submit-bar { flex-direction: column; gap: 10px; }
+    .submit-bar button { width: 100%; justify-content: center; padding: 13px; font-size: 14px; }
+
+    /* Export grid */
+    .export-grid { grid-template-columns: 1fr; }
+
+    /* Pagination */
+    .pagination { flex-direction: column; gap: 8px; align-items: flex-start; }
+    .page-btns { flex-wrap: wrap; }
+
+    /* Progress bar in specialists table */
+    .prog-bar { min-width: 40px; }
+
+    /* Rectifier group cards */
+    #rectifier-groups > div { padding: 12px !important; }
+
+    /* FTAP typeahead dropdown */
+    #ftap-dropdown { max-height: 180px; }
+
+    /* Photo capture button */
+    .q-block div[onclick*="triggerQPhoto"] { padding: 12px; }
+
+    /* Toast */
+    #toast { width: 90%; text-align: center; font-size: 13px; }
+  }
+
+  /* ── THEME TOGGLE BUTTON ── */
+  .theme-toggle-btn { background: none; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 6px; font-size: 14px; cursor: pointer; font-family: inherit; transition: all 0.15s; line-height: 1; }
+  .theme-toggle-btn:hover { background: rgba(255,255,255,0.1); }
+
+  /* ── LIGHT THEME ── */
+  body.light-theme { background: #f0f2f5; color: #1a1a2e; }
+
+  /* Shell */
+  body.light-theme .topbar { background: #0a2540; }
+  body.light-theme .nav { background: #0d2f50; }
+  body.light-theme .nav-btn { color: rgba(255,255,255,0.6); }
+  body.light-theme .nav-btn.active { color: #cc1a1a; border-bottom-color: #cc1a1a; }
+  body.light-theme .nav-btn:hover { color: #fff; }
+  body.light-theme .app-body { background: #f0f2f5; }
+  body.light-theme .signout-btn { border-color: rgba(255,255,255,0.25); color: #fff; }
+  body.light-theme .theme-toggle-btn { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+
+  /* Cards */
+  body.light-theme .card { background: #fff; border: 1px solid #e8e8e8; }
+  body.light-theme .section-label { color: #666; }
+
+  /* Stat cards */
+  body.light-theme .stat-card { background: #fff; border: 1px solid #e8e8e8; }
+  body.light-theme .stat-label { color: #888; }
+  body.light-theme .stat-value { color: #1a1a2e; }
+  body.light-theme .c-blue { color: #185FA5; }
+  body.light-theme .c-green { color: #3B6D11; }
+  body.light-theme .c-amber { color: #854F0B; }
+  body.light-theme .c-red { color: #A32D2D; }
+  body.light-theme .c-gray { color: #5F5E5A; }
+
+  /* Inspection boxes */
+  body.light-theme .insp-box.ok { background: #EAF3DE; border: none; }
+  body.light-theme .insp-box.notok { background: #FCEBEB; border: none; }
+  body.light-theme .insp-box.ok .n { color: #3B6D11; }
+  body.light-theme .insp-box.notok .n { color: #A32D2D; }
+  body.light-theme .insp-box.ok .l { color: #3B6D11; }
+  body.light-theme .insp-box.notok .l { color: #A32D2D; }
+
+  /* Tables */
+  body.light-theme .data-table th { color: #666; border-bottom: 1px solid #eee; background: #fff; }
+  body.light-theme .data-table td { color: #333; border-bottom: 1px solid #f5f5f5; background: #fff; }
+  body.light-theme .data-table tr:hover td { background: #fafafa !important; }
+
+  /* Badges & chips */
+  body.light-theme .badge-ok { background: #EAF3DE; color: #3B6D11; border: none; }
+  body.light-theme .badge-notok { background: #FCEBEB; color: #A32D2D; border: none; }
+  body.light-theme .chip-total { background: #E6F1FB; color: #185FA5; border: none; }
+  body.light-theme .chip-ok { background: #EAF3DE; color: #3B6D11; border: none; }
+  body.light-theme .chip-notok { background: #FCEBEB; color: #A32D2D; border: none; }
+
+  /* Toolbar */
+  body.light-theme .search-box input { background: #fff; border: 1px solid #ddd; color: #333; }
+  body.light-theme .search-box input::placeholder { color: #aaa; }
+  body.light-theme .filter-sel { background: #fff !important; border: 1px solid #ddd; color: #333 !important; }
+  body.light-theme .filter-sel option { background: #fff !important; color: #333 !important; }
+  body.light-theme select { background: #fff !important; color: #333 !important; }
+  body.light-theme select option { background: #fff !important; color: #333 !important; }
+  body.light-theme .btn-sm { background: #fff; border: 1px solid #ddd; color: #555; }
+  body.light-theme .btn-sm:hover { background: #f5f5f5; color: #333; }
+
+  /* Pagination */
+  body.light-theme .pagination { border-top: 1px solid #eee; }
+  body.light-theme .page-info { color: #999; }
+  body.light-theme .page-btn { background: #fff; border: 1px solid #ddd; color: #333; }
+  body.light-theme .page-btn:hover:not(:disabled):not(.active) { background: #f5f5f5; color: #333; }
+
+  /* Progress */
+  body.light-theme .prog-bar { background: #eee; }
+  body.light-theme .prog-pct { color: #888; }
+  body.light-theme .progress-track { background: #eee; }
+  body.light-theme .progress-label { color: #888; }
+  body.light-theme .prog-inline { background: #eee; }
+  body.light-theme .prog-inline-lbl { color: #888; }
+
+  /* Form fields */
+  body.light-theme .field label { color: #555; font-weight: 600; }
+  body.light-theme .field input, body.light-theme .field select, body.light-theme .field textarea { background: #fff !important; border: 1px solid #ddd !important; color: #333 !important; }
+  body.light-theme .field input::placeholder, body.light-theme .field textarea::placeholder { color: #aaa; }
+  body.light-theme .field input[readonly] { background: #f5f5f5 !important; color: #888 !important; border-color: #e8e8e8 !important; }
+  body.light-theme .other-input { background: #fff !important; border: 1px solid #ddd !important; color: #333 !important; }
+
+  /* FTAP ID typeahead */
+  body.light-theme #f-ftap-id-input { background: #fff !important; color: #333 !important; border-color: #ddd !important; }
+  body.light-theme #ftap-dropdown { background: #fff !important; border-color: #185FA5 !important; }
+
+  /* Section titles */
+  body.light-theme .form-section-title { color: #a30000; border-bottom: 1px solid rgba(163,0,0,0.15); }
+
+  /* Checklist question blocks */
+  body.light-theme .q-num { color: #aaa; }
+  body.light-theme .q-text { color: #333; }
+  body.light-theme .q-opt { background: #f5f5f5; border: 1px solid #ddd; color: #444; }
+  body.light-theme .q-opt:hover { background: #eee; color: #222; }
+
+  /* Overall result buttons */
+  body.light-theme .overall-btn { background: #f5f5f5; border: 1px solid #ddd; color: #444; }
+  body.light-theme .overall-btn:hover { background: #eee; color: #222; }
+
+  /* Submit bar */
+  body.light-theme .submit-bar { border-top: 1px solid #eee; }
+  body.light-theme .btn-secondary { background: #fff; border: 1px solid #ddd; color: #555; }
+  body.light-theme .btn-secondary:hover { background: #f5f5f5; color: #333; }
+
+  /* Reports list */
+  body.light-theme .report-row { border-bottom: 1px solid #f0f0f0; }
+  body.light-theme .report-meta strong { color: #1a1a2e; }
+  body.light-theme .report-meta span { color: #888; }
+
+  /* Extract */
+  body.light-theme .export-card { background: #fff; border: 1px solid #e8e8e8; }
+  body.light-theme .export-card h3 { color: #1a1a2e; }
+  body.light-theme .export-card p { color: #777; }
+
+  /* Month grid */
+  body.light-theme .month-cell { background: #fff; border: 1px solid #eee; }
+  body.light-theme .month-cell.has-data:hover { background: #f5f5f5; border-color: #ddd; }
+  body.light-theme .month-cell.current { background: #E6F1FB; border-color: #185FA5; }
+  body.light-theme .month-name { color: #aaa; }
+  body.light-theme .month-count { color: #185FA5; }
+
+  /* Perf list */
+  body.light-theme .perf-row { border-bottom: 1px solid #f5f5f5; }
+  body.light-theme .perf-name { color: #333; }
+  body.light-theme .perf-visited { color: #3B6D11; }
+
+  /* Rectifier & ACU dynamic groups */
+  body.light-theme #rectifier-groups > div { background: #f8f9fb !important; border: 1px solid #e0e8f0 !important; }
+  body.light-theme #rectifier-groups label { color: #555 !important; }
+  body.light-theme #rectifier-groups input, body.light-theme #rectifier-groups select, body.light-theme #rectifier-groups textarea { background: #fff !important; color: #333 !important; border-color: #ddd !important; }
+  body.light-theme #acu-make-groups .field-row .field { color: #333; }
+  body.light-theme #acu-make-groups select { background: #fff !important; color: #333 !important; border-color: #ddd !important; }
+  body.light-theme #acu-make-groups label { color: #555 !important; }
+
+  /* Toast */
+  body.light-theme #geo-status-bar { background: #f0f4f8; border-color: #dde4ec; }
+  body.light-theme #geo-status { color: #666; }
+  body.light-theme #toast { background: #0a2540; color: #fff; border: none; }
+
+  /* Settings panel */
+  body.light-theme #settings-panel { background: #fff; border-color: #e0e0e0; box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  body.light-theme #settings-panel div[style*="color:rgba(255"] { color: #888 !important; }
+  body.light-theme #settings-panel > div:first-child { color: #1a1a2e !important; }
+  body.light-theme #settings-panel button { color: #333 !important; border-color: #ddd !important; background: #f5f5f5 !important; }
+
+  /* Inline styled elements in site facilities */
+  body.light-theme div[style*="background:#f7fbff"] { background: #f8f9fb !important; border-color: #dde8f0 !important; }
+  body.light-theme div[style*="color:#185FA5"][style*="font-size:11px"] { color: #185FA5 !important; }
+
+  /* Export notes box */
+  body.light-theme div[style*="border:1px solid #e8e8e8"][style*="background:#fff"] { background: #fff !important; color: #666 !important; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .insp-grid { grid-template-columns: 1fr 1fr; }
+    .nav-btn { font-size: 10px; padding: 9px 10px; }
+    .topbar-title { font-size: 12px; }
+    .app-body { padding: 10px; }
+  }
+
+  /* ── FONT SIZE ── */
+  body.font-small .field input, body.font-small .field select, body.font-small .field textarea, body.font-small .other-input { font-size: 12px; }
+  body.font-small .q-text { font-size: 12px; }
+  body.font-small .form-section-title { font-size: 11px; }
+  body.font-small .stat-value { font-size: 22px; }
+  body.font-small .data-table td { font-size: 11px; }
+  body.font-small .card { padding: 14px; }
+  body.font-small .nav-btn { font-size: 10px; }
+  body.font-small .field label { font-size: 10px; }
+
+  body.font-large .field input, body.font-large .field select, body.font-large .field textarea, body.font-large .other-input { font-size: 16px; padding: 11px 14px; }
+  body.font-large .q-text { font-size: 16px; line-height: 1.7; }
+  body.font-large .form-section-title { font-size: 15px; }
+  body.font-large .stat-value { font-size: 30px; }
+  body.font-large .data-table td, body.font-large .data-table th { font-size: 14px; padding: 12px 14px; }
+  body.font-large .card { padding: 22px; }
+  body.font-large .nav-btn { font-size: 14px; padding: 13px 18px; }
+  body.font-large .btn-primary, body.font-large .btn-secondary { font-size: 15px; padding: 13px 28px; }
+  body.font-large .field label { font-size: 13px; }
+  body.font-large .section-label { font-size: 13px; }
+  body.font-large .stat-label { font-size: 12px; }
+  body.font-large .report-meta strong { font-size: 15px; }
+  body.font-large .report-meta span { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-grid"></div>
+  <div class="login-card">
+
+    <!-- FTAP Badge -->
+    <div class="login-badge">FTAP</div>
+
+    <!-- Title -->
+    <div class="login-logo">
+      <h2>Site Visit Checklist</h2>
+      <p>Frontier Towers Associates Philippines</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="login-divider"><span>sign in to continue</span></div>
+
+    <!-- Fields -->
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="e.g. AldrinAquino" autocomplete="off"
+        onkeydown="if(event.key==='Enter') document.getElementById('login-pass').focus()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') doLogin()">
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <p class="login-hint" id="login-hint"></p>
+
+    <!-- Version -->
+    <div class="login-version">Version 1.0 &nbsp;·&nbsp; © 2025 FTAP</div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════ -->
+<div id="main-app" style="display:none;flex-direction:column;min-height:100vh;">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo">FT</div>
+      <div>
+        <div class="topbar-title">Site Visit Checklist</div>
+        <div class="topbar-sub">FRONTIER TOWERS ASSOCIATES PH</div>
+      </div>
+    </div>
+    <div class="topbar-user">
+      <div class="avatar-sm" id="user-avatar">JD</div>
+      <div>
+        <div style="font-size:13px;font-weight:600;" id="user-name">Juan Dela Cruz</div>
+        <div style="font-size:10px;opacity:0.55;" id="user-role-label">Power Specialist</div>
+      </div>
+      <button class="signout-btn" onclick="doLogout()">Sign out</button>
+      <button class="theme-toggle-btn" onclick="toggleSettings()" id="settings-btn" title="Settings">⚙️</button>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings-panel" style="display:none;position:fixed;top:54px;right:16px;z-index:9998;width:260px;background:rgba(10,20,40,0.97);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:20px;box-shadow:0 8px 32px rgba(0,0,0,0.4);backdrop-filter:blur(16px);">
+    <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);margin-bottom:16px;letter-spacing:0.5px;">⚙️ Settings</div>
+
+    <!-- Theme Toggle -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px;">Appearance</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="setTheme('dark')" id="btn-dark-mode"
+          style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#f1f5f9;font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;">
+          🌙 Dark
+        </button>
+        <button onclick="setTheme('light')" id="btn-light-mode"
+          style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:12px;font-family:inherit;cursor:pointer;transition:all 0.15s;">
+          ☀️ Light
+        </button>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:10px;">Font Size</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="setFontSize('small')" id="btn-font-small"
+          style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:11px;font-family:inherit;cursor:pointer;transition:all 0.15s;">
+          A Small
+        </button>
+        <button onclick="setFontSize('medium')" id="btn-font-medium"
+          style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#f1f5f9;font-size:13px;font-family:inherit;cursor:pointer;transition:all 0.15s;">
+          A Medium
+        </button>
+        <button onclick="setFontSize('large')" id="btn-font-large"
+          style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:15px;font-family:inherit;cursor:pointer;transition:all 0.15s;">
+          A Large
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav" id="main-nav">
+    <button class="nav-btn active" onclick="showPage('dashboard', this)">Dashboard</button>
+    <button class="nav-btn" id="nav-submit" onclick="showPage('submit', this)">Submit Report</button>
+    <button class="nav-btn" id="nav-reports" onclick="showPage('reports', this)">My Reports</button>
+    <button class="nav-btn" id="nav-all-reports" onclick="showPage('all-reports', this)">All Reports</button>
+    <button class="nav-btn" id="nav-specialists" onclick="showPage('specialists', this)">Specialists</button>
+    <button class="nav-btn" id="nav-extract" onclick="showPage('extract', this)">Extract</button>
+  </div>
+
+  <div class="app-body">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <!-- PS personal stats -->
+      <div id="my-stats" style="display:none;">
+        <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);">
+          <div class="stat-card"><div class="stat-label">SITES TO VISIT</div><div class="stat-value c-blue">40</div></div>
+          <div class="stat-card"><div class="stat-label">SITE VISITED</div><div class="stat-value c-green" id="my-visited">0</div></div>
+        </div>
+      </div>
+
+      <!-- Summary stats -->
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">TOTAL REPORTS</div><div class="stat-value c-blue" id="d-total">0</div></div>
+        <div class="stat-card"><div class="stat-label">THIS MONTH</div><div class="stat-value c-green" id="d-month">0</div></div>
+        <div class="stat-card"><div class="stat-label">THIS YEAR</div><div class="stat-value c-amber" id="d-year">0</div></div>
+        <div class="stat-card"><div class="stat-label">SPECIALISTS</div><div class="stat-value c-gray" id="d-specs">5</div></div>
+      </div>
+
+      <div class="insp-grid">
+        <div class="insp-box ok"><div class="n" id="d-ok">0</div><div class="l">OK</div></div>
+        <div class="insp-box notok"><div class="n" id="d-notok">0</div><div class="l">NOT OK</div></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">MONTHLY VOLUME — 2026</div>
+        <div class="month-grid" id="month-grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">SPECIALIST COMPLETION RATE (2026)</div>
+        <div id="perf-list"></div>
+      </div>
+    </div>
+
+    <!-- SUBMIT REPORT -->
+    <div class="page" id="page-submit">
+      <div class="card">
+        <div class="section-label">SITE INFORMATION</div>
+        <div id="geo-status-bar" style="margin-bottom:12px;border-radius:8px;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+          <div id="geo-status" style="font-size:12px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:6px;">
+            📍 Location not yet enabled
+          </div>
+          <button id="geo-enable-btn" onclick="requestLocation()" style="padding:5px 12px;background:linear-gradient(135deg,#a30000,#cc1a1a);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;">
+            Enable Location
+          </button>
+        </div>
+        <div class="field-row full">
+          <div class="field">
+            <label>FTAP ID</label>
+            <div style="position:relative;">
+              <input type="text" id="f-ftap-id-input" placeholder="Type to search FTAP ID (e.g. PH030793)" autocomplete="off"
+                oninput="ftapSearch(this.value)"
+                onblur="setTimeout(ftapHide, 180)"
+                onfocus="ftapSearch(this.value)"
+                style="width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:14px;font-family:inherit;outline:none;background:#0d1b2e;color:#f1f5f9;">
+              <div id="ftap-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#0d1b2e;border:1px solid rgba(204,26,26,0.5);border-top:none;border-radius:0 0 8px 8px;max-height:220px;overflow-y:auto;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.4);"></div>
+            </div>
+            <input type="hidden" id="f-ftap-id">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>AREA</label><input type="text" id="f-area" placeholder="Auto-filled" readonly style="background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.45);cursor:default;border:1px solid rgba(255,255,255,0.08);"></div>
+          <div class="field"><label>PROVINCE</label><input type="text" id="f-province" placeholder="Auto-filled" readonly style="background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.45);cursor:default;border:1px solid rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="field-row full">
+          <div class="field"><label>ANCHOR MNO SITE ID</label><input type="text" id="f-mno-site-id" placeholder="Auto-filled" readonly style="background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.45);cursor:default;border:1px solid rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>NO. OF MNO</label>
+            <select id="f-mno-count" onchange="handleOther(this,'f-mno-count-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="f-mno-count-other" placeholder="Please specify..." style="display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#0d1b2e;color:#f1f5f9;" onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+          <div class="field"><label>DATE OF VISIT</label><input type="text" id="f-date" readonly style="background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.45);cursor:default;border:1px solid rgba(255,255,255,0.08);"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>PURPOSE OF VISIT</label>
+            <select id="f-purpose" onchange="handleOther(this,'f-purpose-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="">— Select purpose —</option>
+              <option>Site Outage</option>
+              <option>Fuel Consumption (High Consuming)</option>
+              <option>High CM Cost</option>
+              <option>Poor PM</option>
+              <option>Theft Cases (Perimeter Checking)</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="f-purpose-other" placeholder="Please specify..." style="display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#0d1b2e;color:#f1f5f9;" onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+          <div class="field"><label>POWER MODEL</label>
+            <select id="f-power-model" onchange="handleOther(this,'f-power-model-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="">— Select power model —</option>
+              <option>With Genset Indoor/Cabin</option>
+              <option>With Genset Outdoor</option>
+              <option>With Genset Rooftop-Indoor</option>
+              <option>With Genset Rooftop-Outdoor</option>
+              <option>Without Genset GBT-Indoor/Cabin</option>
+              <option>Without Genset GBT-Outdoor</option>
+              <option>Without Genset Rooftop-Indoor</option>
+              <option>Without Genset Rooftop-Outdoor</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="f-power-model-other" placeholder="Please specify..." style="display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#0d1b2e;color:#f1f5f9;" onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+          </div>
+        </div>
+      </div>
+
+      <!-- SITE FACILITIES -->
+      <div class="card">
+        <div class="section-label">SITE FACILITIES</div>
+
+        <div class="field-row">
+          <div class="field"><label>RATING OF TRANSFORMER</label>
+            <select id="sf-transformer" onchange="handleOther(this,'sf-transformer-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>10</option><option>15</option><option>25</option>
+              <option>37.5</option><option>50</option><option>75</option><option>100</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-transformer-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>RATING OF METER</label>
+            <select id="sf-meter" onchange="handleOther(this,'sf-meter-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>CL20</option><option>CL30</option><option>CL40</option>
+              <option>CL100</option><option>CL200</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-meter-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>RATING OF ATS</label>
+            <select id="sf-ats-rating" onchange="handleOther(this,'sf-ats-rating-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>125</option><option>250</option><option>300</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-ats-rating-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>MAKE OF ATS</label>
+            <select id="sf-ats-make" onchange="handleOther(this,'sf-ats-make-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>Powercity</option><option>Lionrock</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-ats-make-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>NO. OF GENSET</label>
+            <select id="sf-genset-count" onchange="handleOther(this,'sf-genset-count-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>0</option><option>1</option><option>2</option>
+              <option>3</option><option>4</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-genset-count-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>MAKE OF GENSET</label>
+            <select id="sf-genset-make" onchange="handleOther(this,'sf-genset-make-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>Powercity</option><option>Mahindra</option><option>Greenpole</option>
+              <option>Supermaly</option><option>Ascot</option><option>Lion Rock</option>
+              <option>Weichai</option><option>FG Wilson</option><option>Hushpower</option><option>Denyo</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-genset-make-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>RATING OF GENSET</label>
+            <select id="sf-genset-rating" onchange="handleOther(this,'sf-genset-rating-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>10</option>
+              <option>15</option>
+              <option>25</option>
+              <option>37.5</option>
+              <option>40</option>
+              <option>45</option>
+              <option>50</option>
+              <option>60</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-genset-rating-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>NO. OF BATTERY CELL</label>
+            <select id="sf-battery-count" onchange="handleOther(this,'sf-battery-count-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option>
+              <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+              <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+              <option>15</option><option>16</option><option>17</option><option>18</option><option>19</option>
+              <option>20</option><option>21</option><option>22</option><option>23</option><option>24</option>
+              <option>25</option><option>26</option><option>27</option><option>28</option><option>29</option>
+              <option>30</option><option>31</option><option>32</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-battery-count-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>TYPE OF BATTERY</label>
+            <select id="sf-battery-type" onchange="handleOther(this,'sf-battery-type-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>Lithium</option><option>VRLA</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-battery-type-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>MAKE OF BATTERY</label>
+            <select id="sf-battery-make" onchange="handleOther(this,'sf-battery-make-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>Shoto</option><option>Leoch</option><option>Changhong</option>
+              <option>Narada</option><option>Huawei</option><option>Sacred Sun</option>
+              <option>ZTE</option><option>Smart ABT</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-battery-make-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>RATING OF BATTERY PER CELL</label>
+            <select id="sf-battery-rating" onchange="handleOther(this,'sf-battery-rating-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>150</option><option>200</option><option>300</option><option>400</option>
+              <option>450</option><option>600</option><option>750</option><option>800</option>
+              <option>900</option><option>1000</option><option>1050</option><option>1200</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-battery-rating-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"><label>TOTAL BATTERY CAPACITY</label>
+            <input type="text" id="sf-battery-capacity" placeholder="e.g. 600 Ah">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>NO. OF RECTIFIER</label>
+            <select id="sf-rect-count" onchange="handleOther(this,'sf-rect-count-other'); buildRectifierGroups(this.value)" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>0</option><option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-rect-count-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"></div>
+        </div>
+
+        <!-- Dynamic rectifier groups injected here -->
+        <div id="rectifier-groups"></div>
+
+        <div class="field-row">
+          <div class="field"><label>NO. OF ACU</label>
+            <select id="sf-acu-count" onchange="handleOther(this,'sf-acu-count-other'); buildAcuMakes(this.value)" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>0</option><option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-acu-count-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"></div>
+        </div>
+
+        <!-- Dynamic Make of ACU fields -->
+        <div id="acu-make-groups"></div>
+
+        <div class="field-row">
+          <div class="field"><label>RATING OF ACU</label>
+            <select id="sf-acu-rating" onchange="handleOther(this,'sf-acu-rating-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>1.5 HP</option><option>2 HP</option><option>2.5 HP</option><option>3 HP</option>
+              <option>3 Tr</option><option>4 Tr</option><option>5 Tr</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-acu-rating-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field"><label>E-LOCK AVAILABILITY</label>
+            <select id="sf-elock" onchange="handleOther(this,'sf-elock-other')" style="background:#0d1b2e;color:#f1f5f9;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              <option>Yes</option><option>No</option>
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="sf-elock-other" placeholder="Please specify..." class="other-input" style="display:none;">
+          </div>
+          <div class="field"></div>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div class="section-label">CHECKLIST — SITE INSPECTION QUESTIONS</div>
+        <div class="progress-track"><div class="progress-track-fill" id="form-progress" style="width:0%"></div></div>
+        <div class="progress-label"><span id="ans-count">0</span> questions answered</div>
+        <div id="questions-container"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-label">OVERALL INSPECTION RESULT</div>
+        <div class="overall-opts">
+          <button class="overall-btn" id="overall-ok" onclick="setOverall('ok')">✓ OK</button>
+          <button class="overall-btn" id="overall-notok" onclick="setOverall('notok')">✗ Not OK</button>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px;">
+          <div class="field">
+            <label>ROOT CAUSE ANALYSIS</label>
+            <textarea id="f-rca" rows="3" placeholder="Enter root cause analysis..."></textarea>
+          </div>
+          <div class="field">
+            <label>FINAL RECOMMENDATION</label>
+            <textarea id="f-recommendation" rows="3" placeholder="Enter final recommendation..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-bar">
+        <button class="btn-secondary" onclick="clearForm()">Clear form</button>
+        <button class="btn-primary" onclick="submitReport()">Submit Report →</button>
+      </div>
+    </div>
+
+    <!-- MY REPORTS -->
+    <div class="page" id="page-reports">
+      <div class="card">
+        <div class="section-label">MY SUBMITTED REPORTS</div>
+        <div id="my-reports-list"><p style="font-size:13px;color:#aaa;padding:12px 0;">No reports submitted yet.</p></div>
+      </div>
+    </div>
+
+    <!-- ALL REPORTS (Admin) -->
+    <div class="page" id="page-all-reports">
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search site ID, specialist, report ID..." oninput="filterReports()">
+        </div>
+        <select class="filter-sel" id="filter-specialist" onchange="filterReports()" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Specialists</option></select>
+        <select class="filter-sel" id="filter-result" onchange="filterReports()" style="background:#0d1b2e;color:#f1f5f9;">
+          <option value="">All Results</option>
+          <option value="ok">OK</option><option value="notok">Not OK</option>
+        </select>
+        <select class="filter-sel" id="filter-month" onchange="filterReports()" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Months</option></select>
+        <select class="filter-sel" id="filter-year" onchange="filterReports()" style="background:#0d1b2e;color:#f1f5f9;">
+          <option value="">All Years</option><option value="2026">2026</option><option value="2025">2025</option>
+        </select>
+        <button class="btn-sm" onclick="resetFilters()">Reset</button>
+      </div>
+      <div class="summary-row" id="filter-summary"></div>
+      <div class="card" style="padding:0 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th onclick="sortBy('id')">Report ID <span id="sort-id"></span></th>
+              <th onclick="sortBy('site')">Site ID <span id="sort-site"></span></th>
+              <th onclick="sortBy('specialist')">Specialist <span id="sort-specialist"></span></th>
+              <th onclick="sortBy('date')">Date <span id="sort-date"></span></th>
+              <th onclick="sortBy('month')">Month <span id="sort-month"></span></th>
+              <th onclick="sortBy('year')">Year <span id="sort-year"></span></th>
+              <th onclick="sortBy('result')">Result <span id="sort-result"></span></th>
+              <th>Photos</th>
+            </tr>
+          </thead>
+          <tbody id="report-tbody"></tbody>
+        </table>
+        <div class="pagination">
+          <div class="page-info" id="page-info"></div>
+          <div class="page-btns" id="page-btns"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPECIALISTS -->
+    <div class="page" id="page-specialists">
+      <div class="toolbar">
+        <select class="filter-sel" id="spec-year" onchange="renderSpecialists()" style="background:#0d1b2e;color:#f1f5f9;">
+          <option value="2026">2026</option><option value="2025">2025</option><option value="">All Time</option>
+        </select>
+        <select class="filter-sel" id="spec-month" onchange="renderSpecialists()" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Months</option></select>
+      </div>
+      <div class="card" style="padding:0 16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Specialist</th><th>Sites to Visit</th><th>Visited</th>
+              <th>OK</th><th>Not OK</th><th>Progress</th>
+            </tr>
+          </thead>
+          <tbody id="spec-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EXTRACT -->
+    <div class="page" id="page-extract">
+      <div class="card">
+        <div class="section-label">FILTER SCOPE</div>
+        <div class="toolbar" style="margin-bottom:8px;">
+          <select class="filter-sel" id="ex-spec" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Specialists (20)</option></select>
+          <select class="filter-sel" id="ex-year" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Years</option><option value="2026">2026</option><option value="2025">2025</option></select>
+          <select class="filter-sel" id="ex-month" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Months</option></select>
+          <select class="filter-sel" id="ex-result" style="background:#0d1b2e;color:#f1f5f9;"><option value="">All Results</option><option value="ok">OK only</option><option value="notok">Not OK only</option></select>
+        </div>
+        <div style="padding:10px 14px;background:#f5f7fa;border-radius:8px;font-size:12px;color:#666;margin-top:6px;">
+          Estimated scope: <strong id="ex-scope" style="color:#333;">12,000 reports</strong> · <strong id="ex-photos" style="color:#333;">~60,000 photos</strong>
+        </div>
+      </div>
+      <div class="export-grid">
+        <div class="export-card">
+          <div class="export-icon" style="background:#EAF3DE;">📊</div>
+          <h3>Download as Excel (.xlsx)</h3>
+          <p>One row per report. Includes Report ID, Specialist, Site, Date, all 50 question answers, Overall Result, Remarks, and Photo count. Handles 12,000+ rows.</p>
+          <div class="prog-inline-wrap" id="prog-xlsx">
+            <div class="prog-inline"><div class="prog-inline-fill" id="bar-xlsx" style="width:0%"></div></div>
+            <div class="prog-inline-lbl" id="lbl-xlsx"></div>
+          </div>
+          <button class="btn-export" onclick="runExport('xlsx')">Download Excel</button>
+        </div>
+        <div class="export-card">
+          <div class="export-icon" style="background:#FCEBEB;">📄</div>
+          <h3>Download PDF + Photos (.zip)</h3>
+          <p>One PDF per site visit with all answers and photos. Photos in subfolders per report. Large exports are batched into multiple ZIP files of 500 reports each.</p>
+          <div class="prog-inline-wrap" id="prog-zip">
+            <div class="prog-inline"><div class="prog-inline-fill" id="bar-zip" style="width:0%"></div></div>
+            <div class="prog-inline-lbl" id="lbl-zip"></div>
+          </div>
+          <button class="btn-export" onclick="runExport('zip')">Download PDF + Photos ZIP</button>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:14px;border:1px solid #e8e8e8;border-radius:10px;font-size:12px;color:#888;line-height:1.8;background:#fff;">
+        <strong style="color:#333;">📌 Export notes:</strong><br>
+        <b>Excel (.xlsx)</b> — Downloads a real spreadsheet with all report columns. Opens in Microsoft Excel, Google Sheets, or LibreOffice.<br>
+        <b>ZIP</b> — Downloads a .zip file containing a CSV of all reports plus a README. Extract with any standard unzip tool.
+      </div>
+    </div>
+
+  </div><!-- /app-body -->
+</div><!-- /main-app -->
+
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+// ── FTAP LOOKUP DATA ──────────────────────────────────────────────────────
+const FTAP_DATA = {"PH030793":{"area":"NLZ","province":"Bulacan","anchor":"NL3246"},"PH130066":{"area":"MIN","province":"Surigao del Norte","anchor":"MIN488"},"PH110452":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1054"},"PH110414":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1051"},"PH110378":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1053"},"PH120274":{"area":"MIN","province":"South Cotabato","anchor":"MIN1066"},"PH110454":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1058"},"PH100144":{"area":"MIN","province":"Camiguin","anchor":"MIN111"},"PH120293":{"area":"MIN","province":"Sultan Kudarat","anchor":"MIN1068"},"PH110456":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1078"},"PH090138":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1096"},"PH130085":{"area":"MIN","province":"Agusan del Sur","anchor":"MIN1266"},"PH090101":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1107"},"PH110465":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1311"},"PH090139":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1133"},"PH110375":{"area":"MIN","province":"Davao del Sur","anchor":"MIN1144"},"PH090145":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1425"},"PH100104":{"area":"MIN","province":"Bukidnon","anchor":"MIN1222"},"PH100162":{"area":"MIN","province":"Misamis Occidental","anchor":"MIN297"},"PH120238":{"area":"MIN","province":"Sultan Kudarat","anchor":"MIN1244"},"PH090141":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1255"},"PH090113":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1257"},"PH100165":{"area":"MIN","province":"Misamis Occidental","anchor":"MIN313"},"PH090127":{"area":"MIN","province":"Zamboanga del Norte","anchor":"MIN348"},"PH130048":{"area":"MIN","province":"Agusan del Sur","anchor":"MIN1267"},"PH120257":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN1299"},"PH090143":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1307"},"PH100195":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN365"},"PH120294":{"area":"MIN","province":"Sultan Kudarat","anchor":"MIN446"},"PH110496":{"area":"MIN","province":"Davao Occidental","anchor":"MIN1398"},"PH120209":{"area":"MIN","province":"South Cotabato","anchor":"MIN1404"},"PH110439":{"area":"MIN","province":"Davao del Norte","anchor":"MIN142"},"PH110486":{"area":"MIN","province":"Davao del Sur","anchor":"MIN605"},"PH110441":{"area":"MIN","province":"Davao del Norte","anchor":"MIN151"},"PH110394":{"area":"MIN","province":"Davao del Norte","anchor":"MIN152"},"PH110404":{"area":"MIN","province":"Davao del Sur","anchor":"MIN180"},"PH110373":{"area":"MIN","province":"Davao Occidental","anchor":"MIN182"},"PH110396":{"area":"MIN","province":"Davao del Sur","anchor":"MIN188"},"PH090180":{"area":"MIN","province":"Zamboanga Sibugay","anchor":"MIN614"},"PH110405":{"area":"MIN","province":"Davao del Sur","anchor":"MIN193"},"PH110410":{"area":"MIN","province":"Davao del Sur","anchor":"MIN202"},"PH110423":{"area":"MIN","province":"Davao del Sur","anchor":"MIN205"},"PH110387":{"area":"MIN","province":"Davao Oriental","anchor":"MIN212"},"PH110397":{"area":"MIN","province":"Davao Oriental","anchor":"MIN221"},"PH110488":{"area":"MIN","province":"Davao del Sur","anchor":"MIN650"},"PH110398":{"area":"MIN","province":"Davao Oriental","anchor":"MIN226"},"PH110400":{"area":"MIN","province":"Davao Oriental","anchor":"MIN235"},"PH100086":{"area":"MIN","province":"Lanao del Norte","anchor":"MIN244"},"PH100200":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN729"},"PH090167":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN804"},"PH140068":{"area":"MIN","province":"Lanao del Sur","anchor":"MIN260"},"PH100202":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN807"},"PH140071":{"area":"MIN","province":"Maguindanao","anchor":"MIN277"},"PH100161":{"area":"MIN","province":"Lanao del Norte","anchor":"MIN822"},"PH140093":{"area":"MIN","province":"Maguindanao","anchor":"MIN284"},"PH140101":{"area":"MIN","province":"Maguindanao","anchor":"MIN942"},"PH100084":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN332"},"PH100189":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN354"},"PH120225":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN377"},"PH120251":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN383"},"PH120246":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN388"},"PH120267":{"area":"MIN","province":"Sarangani","anchor":"MIN399"},"PH120247":{"area":"MIN","province":"Sarangani","anchor":"MIN401"},"PH110484":{"area":"MIN","province":"Davao del Sur","anchor":"MIN408"},"PH120216":{"area":"MIN","province":"Sarangani","anchor":"MIN427"},"PH120214":{"area":"MIN","province":"South Cotabato","anchor":"MIN430"},"PH120289":{"area":"MIN","province":"South Cotabato","anchor":"MIN443"},"PH100198":{"area":"MIN","province":"Misamis Oriental","anchor":"MIN475"},"PH130098":{"area":"MIN","province":"Surigao del Sur","anchor":"MIN495"},"PH130065":{"area":"MIN","province":"Agusan del Sur","anchor":"MIN56"},"PH090158":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN582"},"PH090112":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN589"},"PH090178":{"area":"MIN","province":"Zamboanga Sibugay","anchor":"MIN593"},"PH110424":{"area":"MIN","province":"Davao del Sur","anchor":"MIN616"},"PH100132":{"area":"MIN","province":"Bukidnon","anchor":"MIN71"},"PH100107":{"area":"MIN","province":"Bukidnon","anchor":"MIN75"},"PH120295":{"area":"MIN","province":"Sultan Kudarat","anchor":"MIN774"},"PH120265":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN834"},"PH050202":{"area":"SLZ","province":"Catanduanes","anchor":"SL1002"},"PH050203":{"area":"SLZ","province":"Catanduanes","anchor":"SL1004"},"PH410059":{"area":"SLZ","province":"Marinduque","anchor":"SL1056"},"PH410061":{"area":"SLZ","province":"Marinduque","anchor":"SL1073"},"PH410044":{"area":"SLZ","province":"Marinduque","anchor":"SL1075"},"PH410047":{"area":"SLZ","province":"Marinduque","anchor":"SL1077"},"PH410066":{"area":"SLZ","province":"Marinduque","anchor":"SL1081"},"PH410057":{"area":"SLZ","province":"Marinduque","anchor":"SL1086"},"PH050127":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1109"},"PH050129":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1111"},"PH050130":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1121"},"PH050181":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1122"},"PH050131":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1123"},"PH400318":{"area":"SLZ","province":"Batangas","anchor":"SL120"},"PH400320":{"area":"SLZ","province":"Batangas","anchor":"SL123"},"PH410144":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL14"},"PH400173":{"area":"SLZ","province":"Laguna","anchor":"SL1597"},"PH400446":{"area":"SLZ","province":"Laguna","anchor":"SL1606"},"PH050072":{"area":"SLZ","province":"Albay","anchor":"SL1649"},"PH050023":{"area":"SLZ","province":"Albay","anchor":"SL1650"},"PH400329":{"area":"SLZ","province":"Batangas","anchor":"SL167"},"PH400334":{"area":"SLZ","province":"Batangas","anchor":"SL1675"},"PH400130":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1685"},"PH400115":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1692"},"PH400507":{"area":"SLZ","province":"Lower Cavite","anchor":"SL1693"},"PH410072":{"area":"SLZ","province":"Marinduque","anchor":"SL1697"},"PH400342":{"area":"SLZ","province":"Batangas","anchor":"SL172"},"PH400343":{"area":"SLZ","province":"Batangas","anchor":"SL1722"},"PH050103":{"area":"SLZ","province":"Camarines Norte","anchor":"SL1744"},"PH050028":{"area":"SLZ","province":"Albay","anchor":"SL1751"},"PH050010":{"area":"SLZ","province":"Albay","anchor":"SL1757"},"PH050024":{"area":"SLZ","province":"Camarines Sur","anchor":"SL1769"},"PH400147":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1772"},"PH400127":{"area":"SLZ","province":"Laguna","anchor":"SL1774"},"PH400448":{"area":"SLZ","province":"Laguna","anchor":"SL1775"},"PH410094":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL1784"},"PH410009":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL1785"},"PH410036":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL1787"},"PH410018":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL1788"},"PH410039":{"area":"SLZ","province":"Romblon","anchor":"SL1792"},"PH410034":{"area":"SLZ","province":"Romblon","anchor":"SL1794"},"PH410077":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL19"},"PH400207":{"area":"SLZ","province":"Batangas","anchor":"SL190"},"PH400139":{"area":"SLZ","province":"Lower Cavite","anchor":"SL1919"},"PH400361":{"area":"SLZ","province":"Batangas","anchor":"SL1926"},"PH400209":{"area":"SLZ","province":"Batangas","anchor":"SL1928"},"PH400165":{"area":"SLZ","province":"Lower Cavite","anchor":"SL1935"},"PH400451":{"area":"SLZ","province":"Laguna","anchor":"SL1965"},"PH400212":{"area":"SLZ","province":"Batangas","anchor":"SL200"},"PH400174":{"area":"SLZ","province":"Laguna","anchor":"SL2013"},"PH400512":{"area":"SLZ","province":"Lower Cavite","anchor":"SL2135"},"PH400148":{"area":"SLZ","province":"Lower Cavite","anchor":"SL2163"},"PH400383":{"area":"SLZ","province":"Batangas","anchor":"SL237"},"PH410100":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL24"},"PH400387":{"area":"SLZ","province":"Batangas","anchor":"SL243"},"PH050046":{"area":"SLZ","province":"Albay","anchor":"SL2451"},"PH400400":{"area":"SLZ","province":"Batangas","anchor":"SL263"},"PH410258":{"area":"SLZ","province":"Romblon","anchor":"SL272"},"PH400238":{"area":"SLZ","province":"Batangas","anchor":"SL29"},"PH410268":{"area":"SLZ","province":"Romblon","anchor":"SL293"},"PH400532":{"area":"SLZ","province":"Quezon","anchor":"SL297"},"PH400243":{"area":"SLZ","province":"Batangas","anchor":"SL3021"},"PH400537":{"area":"SLZ","province":"Quezon","anchor":"SL312"},"PH400606":{"area":"SLZ","province":"Quezon","anchor":"SL317"},"PH410176":{"area":"SLZ","province":"Palawan","anchor":"SL331"},"PH410019":{"area":"SLZ","province":"Palawan","anchor":"SL334"},"PH410211":{"area":"SLZ","province":"Palawan","anchor":"SL337"},"PH410220":{"area":"SLZ","province":"Palawan","anchor":"SL354"},"PH400408":{"area":"SLZ","province":"Batangas","anchor":"SL36"},"PH410182":{"area":"SLZ","province":"Palawan","anchor":"SL387"},"PH400170":{"area":"SLZ","province":"Quezon","anchor":"SL408"},"PH400271":{"area":"SLZ","province":"Batangas","anchor":"SL4122"},"PH400133":{"area":"SLZ","province":"Upper Cavite","anchor":"SL419"},"PH400117":{"area":"SLZ","province":"Upper Cavite","anchor":"SL422"},"PH400703":{"area":"SLZ","province":"Upper Cavite","anchor":"SL428"},"PH400119":{"area":"SLZ","province":"Upper Cavite","anchor":"SL437"},"PH410008":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL44"},"PH400188":{"area":"SLZ","province":"Upper Cavite","anchor":"SL444"},"PH400110":{"area":"SLZ","province":"Lower Cavite","anchor":"SL446"},"PH400710":{"area":"SLZ","province":"Upper Cavite","anchor":"SL447"},"PH410131":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL50"},"PH050106":{"area":"SLZ","province":"Camarines Norte","anchor":"SL533"},"PH050123":{"area":"SLZ","province":"Camarines Norte","anchor":"SL543"},"PH050032":{"area":"SLZ","province":"Camarines Norte","anchor":"SL553"},"PH400300":{"area":"SLZ","province":"Batangas","anchor":"SL5608"},"PH050185":{"area":"SLZ","province":"Camarines Sur","anchor":"SL561"},"PH400715":{"area":"SLZ","province":"Upper Cavite","anchor":"SL567"},"PH400302":{"area":"SLZ","province":"Batangas","anchor":"SL5714"},"PH400198":{"area":"SLZ","province":"Upper Cavite","anchor":"SL5717"},"PH400502":{"area":"SLZ","province":"Lower Cavite","anchor":"SL572"},"PH410015":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL58"},"PH400457":{"area":"SLZ","province":"Laguna","anchor":"SL618"},"PH410101":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL64"},"PH050018":{"area":"SLZ","province":"Camarines Sur","anchor":"SL644"},"PH400180":{"area":"SLZ","province":"Laguna","anchor":"SL657"},"PH400471":{"area":"SLZ","province":"Laguna","anchor":"SL665"},"PH410043":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL68"},"PH400477":{"area":"SLZ","province":"Laguna","anchor":"SL683"},"PH400478":{"area":"SLZ","province":"Laguna","anchor":"SL684"},"PH400152":{"area":"SLZ","province":"Laguna","anchor":"SL694"},"PH050163":{"area":"SLZ","province":"Camarines Sur","anchor":"SL711"},"PH050164":{"area":"SLZ","province":"Camarines Sur","anchor":"SL718"},"PH050167":{"area":"SLZ","province":"Camarines Sur","anchor":"SL723"},"PH400120":{"area":"SLZ","province":"Upper Cavite","anchor":"SL724"},"PH050038":{"area":"SLZ","province":"Camarines Sur","anchor":"SL728"},"PH050170":{"area":"SLZ","province":"Camarines Sur","anchor":"SL732"},"PH400157":{"area":"SLZ","province":"Upper Cavite","anchor":"SL738"},"PH400725":{"area":"SLZ","province":"Upper Cavite","anchor":"SL741"},"PH400727":{"area":"SLZ","province":"Upper Cavite","anchor":"SL760"},"PH400156":{"area":"SLZ","province":"Lower Cavite","anchor":"SL761"},"PH050083":{"area":"SLZ","province":"Albay","anchor":"SL782"},"PH050086":{"area":"SLZ","province":"Albay","anchor":"SL785"},"PH050090":{"area":"SLZ","province":"Albay","anchor":"SL796"},"PH050017":{"area":"SLZ","province":"Albay","anchor":"SL797"},"PH050030":{"area":"SLZ","province":"Albay","anchor":"SL798"},"PH410041":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL8"},"PH050064":{"area":"SLZ","province":"Albay","anchor":"SL802"},"PH050065":{"area":"SLZ","province":"Albay","anchor":"SL804"},"PH050091":{"area":"SLZ","province":"Albay","anchor":"SL805"},"PH050067":{"area":"SLZ","province":"Albay","anchor":"SL811"},"PH050040":{"area":"SLZ","province":"Albay","anchor":"SL813"},"PH400549":{"area":"SLZ","province":"Quezon","anchor":"SL814"},"PH400551":{"area":"SLZ","province":"Quezon","anchor":"SL818"},"PH400609":{"area":"SLZ","province":"Quezon","anchor":"SL819"},"PH400553":{"area":"SLZ","province":"Quezon","anchor":"SL825"},"PH400555":{"area":"SLZ","province":"Quezon","anchor":"SL828"},"PH400556":{"area":"SLZ","province":"Quezon","anchor":"SL831"},"PH400558":{"area":"SLZ","province":"Quezon","anchor":"SL833"},"PH400559":{"area":"SLZ","province":"Quezon","anchor":"SL834"},"PH400560":{"area":"SLZ","province":"Quezon","anchor":"SL835"},"PH400489":{"area":"SLZ","province":"Laguna","anchor":"SL862"},"PH400169":{"area":"SLZ","province":"Laguna","anchor":"SL866"},"PH400490":{"area":"SLZ","province":"Laguna","anchor":"SL868"},"PH410106":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL89"},"PH050245":{"area":"SLZ","province":"Sorsogon","anchor":"SL894"},"PH050246":{"area":"SLZ","province":"Sorsogon","anchor":"SL895"},"PH050247":{"area":"SLZ","province":"Sorsogon","anchor":"SL896"},"PH050261":{"area":"SLZ","province":"Sorsogon","anchor":"SL900"},"PH050248":{"area":"SLZ","province":"Sorsogon","anchor":"SL906"},"PH050022":{"area":"SLZ","province":"Sorsogon","anchor":"SL910"},"PH050252":{"area":"SLZ","province":"Sorsogon","anchor":"SL913"},"PH050096":{"area":"SLZ","province":"Albay","anchor":"SL926"},"PH050208":{"area":"SLZ","province":"Catanduanes","anchor":"SL934"},"PH050021":{"area":"SLZ","province":"Catanduanes","anchor":"SL942"},"PH050225":{"area":"SLZ","province":"Masbate","anchor":"SL949"},"PH410110":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL95"},"PH000020":{"area":"GMA","province":"Metro Manila","anchor":"NCR1011"},"PH000415":{"area":"GMA","province":"Metro Manila","anchor":"NCR102"},"PH000051":{"area":"GMA","province":"Metro Manila","anchor":"NCR1021"},"PH000485":{"area":"GMA","province":"Metro Manila","anchor":"NCR1040"},"PH000454":{"area":"GMA","province":"Metro Manila","anchor":"NCR1046"},"PH000167":{"area":"GMA","province":"Metro Manila","anchor":"NCR1054"},"PH000666":{"area":"GMA","province":"Metro Manila","anchor":"NCR106"},"PH000030":{"area":"GMA","province":"Metro Manila","anchor":"NCR108"},"PH120224":{"area":"MIN","province":"Cotabato (North Cotabato)","anchor":"MIN374"},"PH000054":{"area":"GMA","province":"Metro Manila","anchor":"NCR1082"},"PH000084":{"area":"GMA","province":"Metro Manila","anchor":"NCR110"},"PH000046":{"area":"GMA","province":"Metro Manila","anchor":"NCR1108"},"PH000085":{"area":"GMA","province":"Metro Manila","anchor":"NCR113"},"PH000292":{"area":"GMA","province":"Metro Manila","anchor":"NCR1131"},"PH000086":{"area":"GMA","province":"Metro Manila","anchor":"NCR1188"},"PH000487":{"area":"GMA","province":"Metro Manila","anchor":"NCR12"},"PH000099":{"area":"GMA","province":"Metro Manila","anchor":"NCR123"},"PH000062":{"area":"GMA","province":"Metro Manila","anchor":"NCR131"},"PH000066":{"area":"GMA","province":"Metro Manila","anchor":"NCR133"},"PH000257":{"area":"GMA","province":"Metro Manila","anchor":"NCR149"},"PH000067":{"area":"GMA","province":"Metro Manila","anchor":"NCR178"},"PH000040":{"area":"GMA","province":"Metro Manila","anchor":"NCR221"},"PH000068":{"area":"GMA","province":"Metro Manila","anchor":"NCR2255"},"PH000039":{"area":"GMA","province":"Metro Manila","anchor":"NCR2267"},"PH000049":{"area":"GMA","province":"Metro Manila","anchor":"NCR2269"},"PH000042":{"area":"GMA","province":"Metro Manila","anchor":"NCR249"},"PH000050":{"area":"GMA","province":"Metro Manila","anchor":"NCR2652"},"PH000058":{"area":"GMA","province":"Metro Manila","anchor":"NCR2671"},"PH000059":{"area":"GMA","province":"Metro Manila","anchor":"NCR2720"},"PH000088":{"area":"GMA","province":"Metro Manila","anchor":"NCR2747"},"PH000302":{"area":"GMA","province":"Metro Manila","anchor":"NCR285"},"PH000089":{"area":"GMA","province":"Metro Manila","anchor":"NCR2890"},"PH000090":{"area":"GMA","province":"Metro Manila","anchor":"NCR2966"},"PH000091":{"area":"GMA","province":"Metro Manila","anchor":"NCR305"},"PH000610":{"area":"GMA","province":"Metro Manila","anchor":"NCR3653"},"PH000031":{"area":"GMA","province":"Metro Manila","anchor":"NCR3830"},"PH000165":{"area":"GMA","province":"Metro Manila","anchor":"NCR3886"},"PH000052":{"area":"GMA","province":"Metro Manila","anchor":"NCR495"},"PH000343":{"area":"GMA","province":"Metro Manila","anchor":"NCR55"},"PH000026":{"area":"GMA","province":"Metro Manila","anchor":"NCR572"},"PH000075":{"area":"GMA","province":"Metro Manila","anchor":"NCR592"},"PH000060":{"area":"GMA","province":"Metro Manila","anchor":"NCR595"},"PH000032":{"area":"GMA","province":"Metro Manila","anchor":"NCR643"},"PH000064":{"area":"GMA","province":"Metro Manila","anchor":"NCR662"},"PH000082":{"area":"GMA","province":"Metro Manila","anchor":"NCR674"},"PH000095":{"area":"GMA","province":"Metro Manila","anchor":"NCR688"},"PH000352":{"area":"GMA","province":"Metro Manila","anchor":"NCR692"},"PH000018":{"area":"GMA","province":"Metro Manila","anchor":"NCR7071"},"PH000022":{"area":"GMA","province":"Metro Manila","anchor":"NCR712"},"PH000055":{"area":"GMA","province":"Metro Manila","anchor":"NCR743"},"PH000367":{"area":"GMA","province":"Metro Manila","anchor":"NCR764"},"PH000102":{"area":"GMA","province":"Metro Manila","anchor":"NCR812"},"PH000077":{"area":"GMA","province":"Metro Manila","anchor":"NCR825"},"PH000056":{"area":"GMA","province":"Metro Manila","anchor":"NCR840"},"PH000375":{"area":"GMA","province":"Metro Manila","anchor":"NCR842"},"PH000097":{"area":"GMA","province":"Metro Manila","anchor":"NCR8878"},"PH000109":{"area":"GMA","province":"Metro Manila","anchor":"NCR8902"},"PH000474":{"area":"GMA","province":"Metro Manila","anchor":"NCR9"},"PH000065":{"area":"GMA","province":"Metro Manila","anchor":"NCR99"},"PH400635":{"area":"GMA","province":"Rizal","anchor":"SL1132"},"PH400639":{"area":"GMA","province":"Rizal","anchor":"SL1854"},"PH400641":{"area":"GMA","province":"Rizal","anchor":"SL1899"},"PH400171":{"area":"GMA","province":"Rizal","anchor":"SL1947"},"PH400155":{"area":"GMA","province":"Rizal","anchor":"SL2083"},"PH400655":{"area":"GMA","province":"Rizal","anchor":"SL2240"},"PH400661":{"area":"GMA","province":"Rizal","anchor":"SL463"},"PH400662":{"area":"GMA","province":"Rizal","anchor":"SL464"},"PH400197":{"area":"GMA","province":"Rizal","anchor":"SL4712"},"PH400666":{"area":"GMA","province":"Rizal","anchor":"SL486"},"PH400669":{"area":"GMA","province":"Rizal","anchor":"SL492"},"PH400107":{"area":"GMA","province":"Rizal","anchor":"SL499"},"PH400150":{"area":"GMA","province":"Rizal","anchor":"SL508"},"PH400676":{"area":"GMA","province":"Rizal","anchor":"SL509"},"PH400677":{"area":"GMA","province":"Rizal","anchor":"SL512"},"PH400108":{"area":"GMA","province":"Rizal","anchor":"SL513"},"PH400678":{"area":"GMA","province":"Rizal","anchor":"SL515"},"PH400679":{"area":"GMA","province":"Rizal","anchor":"SL516"},"PH400131":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1690"},"PH400132":{"area":"SLZ","province":"Upper Cavite","anchor":"SL400"},"PH400118":{"area":"SLZ","province":"Upper Cavite","anchor":"SL425"},"PH410005":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL43"},"PH410040":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL55"},"PH400134":{"area":"SLZ","province":"Upper Cavite","anchor":"SL736"},"PH080246":{"area":"VIS","province":"Samar (Western Samar)","anchor":"VIS2043"},"PH080271":{"area":"VIS","province":"Leyte","anchor":"VIS427"},"PH080232":{"area":"VIS","province":"Leyte","anchor":"VIS431"},"PH080272":{"area":"VIS","province":"Leyte","anchor":"VIS434"},"PH080234":{"area":"VIS","province":"Leyte","anchor":"VIS456"},"PH080253":{"area":"VIS","province":"Northern Samar","anchor":"VIS620"},"PH080243":{"area":"VIS","province":"Eastern Samar","anchor":"VIS654"},"PH080257":{"area":"VIS","province":"Samar (Western Samar)","anchor":"VIS657"},"PH080239":{"area":"VIS","province":"Leyte","anchor":"VIS910"},"PH090089":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN1254"},"PH090111":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN560"},"PH090114":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN570"},"PH090115":{"area":"MIN","province":"Zamboanga del Sur","anchor":"MIN590"},"PH000107":{"area":"GMA","province":"Metro Manila","anchor":"NCR10612"},"PH000057":{"area":"GMA","province":"Metro Manila","anchor":"NCR20"},"PH000029":{"area":"GMA","province":"Metro Manila","anchor":"NCR224"},"PH000069":{"area":"GMA","province":"Metro Manila","anchor":"NCR245"},"PH000093":{"area":"GMA","province":"Metro Manila","anchor":"NCR428"},"PH000043":{"area":"GMA","province":"Metro Manila","anchor":"NCR647"},"PH000076":{"area":"GMA","province":"Metro Manila","anchor":"NCR71"},"PH000035":{"area":"GMA","province":"Metro Manila","anchor":"NCR7270"},"PH000079":{"area":"GMA","province":"Metro Manila","anchor":"NCR888"},"PH000080":{"area":"GMA","province":"Metro Manila","anchor":"NCR979"},"PH400161":{"area":"GMA","province":"Rizal","anchor":"SL1138"},"PH400162":{"area":"GMA","province":"Rizal","anchor":"SL1979"},"PH400151":{"area":"GMA","province":"Rizal","anchor":"SL517"},"PH030508":{"area":"NLZ","province":"Pampanga","anchor":"NL105"},"PH030509":{"area":"NLZ","province":"Pampanga","anchor":"NL108"},"PH030511":{"area":"NLZ","province":"Pampanga","anchor":"NL110"},"PH030347":{"area":"NLZ","province":"Nueva Ecija","anchor":"NL1101"},"PH030331":{"area":"NLZ","province":"Nueva Ecija","anchor":"NL1105"},"PH030512":{"area":"NLZ","province":"Pampanga","anchor":"NL111"},"PH010009":{"area":"NLZ","province":"Pangasinan","anchor":"NL1120"},"PH030320":{"area":"NLZ","province":"Zambales","anchor":"NL1160"},"PH020118":{"area":"NLZ","province":"Nueva Vizcaya","anchor":"NL1204"},"PH030283":{"area":"NLZ","province":"Tarlac","anchor":"NL13"},"PH030279":{"area":"NLZ","province":"Pampanga","anchor":"NL130"},"PH010041":{"area":"NLZ","province":"Pangasinan","anchor":"NL1398"},"PH030334":{"area":"NLZ","province":"Tarlac","anchor":"NL14"},"PH030298":{"area":"NLZ","province":"Nueva Ecija","anchor":"NL1401"},"PH030267":{"area":"NLZ","province":"Nueva Ecija","anchor":"NL1428"},"PH020073":{"area":"NLZ","province":"Isabela","anchor":"NL1434"},"PH030289":{"area":"NLZ","province":"Pampanga","anchor":"NL1476"},"PH020043":{"area":"NLZ","province":"Cagayan","anchor":"NL1485"},"PH010027":{"area":"NLZ","province":"Pangasinan","anchor":"NL1494"},"PH010181":{"area":"NLZ","province":"Pangasinan","anchor":"NL1496"},"PH010131":{"area":"NLZ","province":"La Union","anchor":"NL1498"},"PH010184":{"area":"NLZ","province":"Pangasinan","anchor":"NL1501"},"PH030317":{"area":"NLZ","province":"Zambales","anchor":"NL1523"},"PH030338":{"area":"NLZ","province":"Pampanga","anchor":"NL1536"},"PH150074":{"area":"NLZ","province":"Mountain Province","anchor":"NL1539"},"PH010002":{"area":"NLZ","province":"La Union","anchor":"NL1543"},"PH150063":{"area":"NLZ","province":"Kalinga","anchor":"NL1545"},"PH020044":{"area":"NLZ","province":"Cagayan","anchor":"NL1555"},"PH010135":{"area":"NLZ","province":"La Union","anchor":"NL1568"},"PH020011":{"area":"NLZ","province":"Isabela","anchor":"NL1577"},"PH030322":{"area":"NLZ","province":"Pampanga","anchor":"NL162"},"PH030524":{"area":"NLZ","province":"Pampanga","anchor":"NL163"},"PH030351":{"area":"NLZ","province":"Bataan","anchor":"NL1701"},"PH030308":{"area":"NLZ","province":"Zambales","anchor":"NL1707"},"PH030280":{"area":"NLZ","province":"Pampanga","anchor":"NL173"},"PH030301":{"area":"NLZ","province":"Zambales","anchor":"NL180"},"PH030309":{"area":"NLZ","province":"Zambales","anchor":"NL181"},"PH030302":{"area":"NLZ","province":"Zambales","anchor":"NL183"},"PH030533":{"area":"NLZ","province":"Pampanga","anchor":"NL1833"},"PH030408":{"area":"NLZ","province":"Bulacan","anchor":"NL1835"},"PH030292":{"area":"NLZ","province":"Zambales","anchor":"NL186"},"PH030303":{"area":"NLZ","province":"Zambales","anchor":"NL201"},"PH030595":{"area":"NLZ","province":"Zambales","anchor":"NL206"},"PH010066":{"area":"NLZ","province":"Ilocos Norte","anchor":"NL2179"},"PH030480":{"area":"NLZ","province":"Nueva Ecija","anchor":"NL235"},"PH030372":{"area":"NLZ","province":"Bataan","anchor":"NL267"},"PH030312":{"area":"NLZ","province":"Bataan","anchor":"NL269"},"PH030375":{"area":"NLZ","province":"Bataan","anchor":"NL276"},"PH150069":{"area":"NLZ","province":"Kalinga","anchor":"NL322"},"PH150066":{"area":"NLZ","province":"Kalinga","anchor":"NL325"},"PH030324":{"area":"NLZ","province":"Pampanga","anchor":"NL3481"},"PH030310":{"area":"NLZ","province":"Pampanga","anchor":"NL3528"},"PH010086":{"area":"NLZ","province":"Ilocos Norte","anchor":"NL360"},"PH010119":{"area":"NLZ","province":"Ilocos Sur","anchor":"NL365"},"PH150011":{"area":"NLZ","province":"Abra","anchor":"NL368"},"PH150012":{"area":"NLZ","province":"Abra","anchor":"NL369"},"PH150013":{"area":"NLZ","province":"Abra","anchor":"NL376"},"PH150005":{"area":"NLZ","province":"Abra","anchor":"NL384"},"PH150020":{"area":"NLZ","province":"Abra","anchor":"NL386"},"PH150006":{"area":"NLZ","province":"Abra","anchor":"NL390"},"PH010113":{"area":"NLZ","province":"Ilocos Sur","anchor":"NL404"},"PH010035":{"area":"NLZ","province":"Ilocos Sur","anchor":"NL408"},"PH030311":{"area":"NLZ","province":"Pampanga","anchor":"NL4206"},"PH010052":{"area":"NLZ","province":"La Union","anchor":"NL452"},"PH010141":{"area":"NLZ","province":"La Union","anchor":"NL454"},"PH010144":{"area":"NLZ","province":"La Union","anchor":"NL465"},"PH010147":{"area":"NLZ","province":"La Union","anchor":"NL469"},"PH010149":{"area":"NLZ","province":"La Union","anchor":"NL476"},"PH150047":{"area":"NLZ","province":"Benguet","anchor":"NL515"},"PH150004":{"area":"NLZ","province":"Benguet","anchor":"NL524"},"PH150054":{"area":"NLZ","province":"Benguet","anchor":"NL538"},"PH030327":{"area":"NLZ","province":"Bulacan","anchor":"NL542"},"PH030295":{"area":"NLZ","province":"Bulacan","anchor":"NL558"},"PH030286":{"area":"NLZ","province":"Bulacan","anchor":"NL570"},"PH030272":{"area":"NLZ","province":"Bulacan","anchor":"NL580"},"PH030297":{"area":"NLZ","province":"Bulacan","anchor":"NL585"},"PH030288":{"area":"NLZ","province":"Bulacan","anchor":"NL595"},"PH030323":{"area":"NLZ","province":"Bulacan","anchor":"NL605"},"PH030433":{"area":"NLZ","province":"Bulacan","anchor":"NL613"},"PH030435":{"area":"NLZ","province":"Bulacan","anchor":"NL616"},"PH030273":{"area":"NLZ","province":"Bulacan","anchor":"NL627"},"PH030271":{"area":"NLZ","province":"Bulacan","anchor":"NL628"},"PH010069":{"area":"NLZ","province":"Ilocos Norte","anchor":"NL637"},"PH010078":{"area":"NLZ","province":"Ilocos Norte","anchor":"NL657"},"PH030268":{"area":"NLZ","province":"Pampanga","anchor":"NL66"},"PH010081":{"area":"NLZ","province":"Ilocos Norte","anchor":"NL661"},"PH030263":{"area":"NLZ","province":"Pampanga","anchor":"NL69"},"PH010012":{"area":"NLZ","province":"La Union","anchor":"NL695"},"PH030290":{"area":"NLZ","province":"Pampanga","anchor":"NL71"},"PH010026":{"area":"NLZ","province":"La Union","anchor":"NL715"},"PH030537":{"area":"NLZ","province":"Pampanga","anchor":"NL72"},"PH010043":{"area":"NLZ","province":"Pangasinan","anchor":"NL723"},"PH010199":{"area":"NLZ","province":"Pangasinan","anchor":"NL729"},"PH010017":{"area":"NLZ","province":"Pangasinan","anchor":"NL745"},"PH010209":{"area":"NLZ","province":"Pangasinan","anchor":"NL769"},"PH010211":{"area":"NLZ","province":"Pangasinan","anchor":"NL778"},"PH010212":{"area":"NLZ","province":"Pangasinan","anchor":"NL780"},"PH030540":{"area":"NLZ","province":"Pampanga","anchor":"NL80"},"PH030293":{"area":"NLZ","province":"Pampanga","anchor":"NL82"},"PH030281":{"area":"NLZ","province":"Pampanga","anchor":"NL84"},"PH030542":{"area":"NLZ","province":"Pampanga","anchor":"NL85"},"PH150023":{"area":"NLZ","province":"Apayao","anchor":"NL854"},"PH020096":{"area":"NLZ","province":"Isabela","anchor":"NL878"},"PH020065":{"area":"NLZ","province":"Cagayan","anchor":"NL888"},"PH020067":{"area":"NLZ","province":"Cagayan","anchor":"NL893"},"PH020104":{"area":"NLZ","province":"Isabela","anchor":"NL919"},"PH030547":{"area":"NLZ","province":"Pampanga","anchor":"NL92"},"PH020014":{"area":"NLZ","province":"Isabela","anchor":"NL937"},"PH020126":{"area":"NLZ","province":"Nueva Vizcaya","anchor":"NL945"},"PH020108":{"area":"NLZ","province":"Isabela","anchor":"NL948"},"PH020111":{"area":"NLZ","province":"Isabela","anchor":"NL962"},"PH150068":{"area":"NLZ","province":"Kalinga","anchor":"NL989"},"PH030269":{"area":"NLZ","province":"Pampanga","anchor":"NL99"},"PH400146":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1585"},"PH410017":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL1700"},"PH410021":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL1703"},"PH410032":{"area":"SLZ","province":"Occidental Mindoro","anchor":"SL1781"},"PH400116":{"area":"SLZ","province":"Upper Cavite","anchor":"SL1969"},"PH410045":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL3181"},"PH410016":{"area":"SLZ","province":"Oriental Mindoro","anchor":"SL79"},"PH070263":{"area":"VIS","province":"Cebu","anchor":"VIS101"},"PH070224":{"area":"VIS","province":"Cebu","anchor":"VIS125"},"PH070225":{"area":"VIS","province":"Cebu","anchor":"VIS14"},"PH070238":{"area":"VIS","province":"Cebu","anchor":"VIS140"},"PH070239":{"area":"VIS","province":"Cebu","anchor":"VIS141"},"PH070203":{"area":"VIS","province":"Cebu","anchor":"VIS158"},"PH070202":{"area":"VIS","province":"Cebu","anchor":"VIS185"},"PH060184":{"area":"VIS","province":"Iloilo","anchor":"VIS1866"},"PH060267":{"area":"VIS","province":"Iloilo","anchor":"VIS1906"},"PH070207":{"area":"VIS","province":"Cebu","anchor":"VIS1934"},"PH070308":{"area":"VIS","province":"Negros Oriental","anchor":"VIS2026"},"PH070249":{"area":"VIS","province":"Bohol","anchor":"VIS2049"},"PH070227":{"area":"VIS","province":"Cebu","anchor":"VIS2054"},"PH070216":{"area":"VIS","province":"Bohol","anchor":"VIS223"},"PH070241":{"area":"VIS","province":"Bohol","anchor":"VIS257"},"PH070244":{"area":"VIS","province":"Bohol","anchor":"VIS259"},"PH070230":{"area":"VIS","province":"Cebu","anchor":"VIS27"},"PH070246":{"area":"VIS","province":"Bohol","anchor":"VIS271"},"PH060208":{"area":"VIS","province":"Guimaras","anchor":"VIS320"},"PH060257":{"area":"VIS","province":"Capiz","anchor":"VIS367"},"PH060209":{"area":"VIS","province":"Capiz","anchor":"VIS382"},"PH070211":{"area":"VIS","province":"Cebu","anchor":"VIS47"},"PH060215":{"area":"VIS","province":"Iloilo","anchor":"VIS523"},"PH070291":{"area":"VIS","province":"Cebu","anchor":"VIS54"},"PH060193":{"area":"VIS","province":"Iloilo","anchor":"VIS566"},"PH070218":{"area":"VIS","province":"Cebu","anchor":"VIS57"},"PH060216":{"area":"VIS","province":"Iloilo","anchor":"VIS589"},"PH070295":{"area":"VIS","province":"Cebu","anchor":"VIS68"},"PH070243":{"area":"VIS","province":"Cebu","anchor":"VIS70"},"PH070297":{"area":"VIS","province":"Cebu","anchor":"VIS71"},"PH060176":{"area":"VIS","province":"Negros Occidental","anchor":"VIS710"},"PH060177":{"area":"VIS","province":"Negros Occidental","anchor":"VIS713"},"PH060226":{"area":"VIS","province":"Negros Occidental","anchor":"VIS71502"},"PH060227":{"area":"VIS","province":"Negros Occidental","anchor":"VIS739"},"PH060180":{"area":"VIS","province":"Negros Occidental","anchor":"VIS746"},"PH070300":{"area":"VIS","province":"Cebu","anchor":"VIS75"},"PH060310":{"area":"VIS","province":"Negros Occidental","anchor":"VIS777"},"PH060312":{"area":"VIS","province":"Negros Occidental","anchor":"VIS804"},"PH070228":{"area":"VIS","province":"Cebu","anchor":"VIS81"},"PH060200":{"area":"VIS","province":"Negros Occidental","anchor":"VIS81504"},"PH070260":{"area":"VIS","province":"Bohol","anchor":"VIS81506"},"PH060230":{"area":"VIS","province":"Negros Occidental","anchor":"VIS824"},"PH060321":{"area":"VIS","province":"Negros Occidental","anchor":"VIS838"},"PH070214":{"area":"VIS","province":"Cebu","anchor":"VIS87"},"PH060183":{"area":"VIS","province":"Negros Occidental","anchor":"VIS882"},"PH060285":{"area":"VIS","province":"Negros Occidental","anchor":"VIS885"},"PH070222":{"area":"VIS","province":"Cebu","anchor":"VIS89"},"PH060202":{"area":"VIS","province":"Negros Occidental","anchor":"VIS890"},"PH060326":{"area":"VIS","province":"Negros Occidental","anchor":"VIS891"},"PH070303":{"area":"VIS","province":"Cebu","anchor":"VIS899"},"PH070229":{"area":"VIS","province":"Cebu","anchor":"VIS90"},"PH070305":{"area":"VIS","province":"Cebu","anchor":"VIS92"}};
+
+// Build sorted FTAP ID list for typeahead
+const FTAP_IDS = Object.keys(FTAP_DATA).sort();
+
+function buildFtapDropdown() {
+  // Nothing to build — typeahead is dynamic
+}
+
+function ftapSearch(q) {
+  const dd = document.getElementById('ftap-dropdown');
+  const val = q.trim().toUpperCase();
+  if (!val) {
+    // Show first 30 when empty/focused
+    const initial = FTAP_IDS.slice(0, 30);
+    renderFtapDropdown(initial, dd);
+    dd.style.display = initial.length ? 'block' : 'none';
+    return;
+  }
+  const matches = FTAP_IDS.filter(id => id.includes(val)).slice(0, 50);
+  renderFtapDropdown(matches, dd, val);
+  dd.style.display = matches.length ? 'block' : 'none';
+}
+
+function renderFtapDropdown(ids, dd, highlight) {
+  const isLight = document.body.classList.contains('light-theme');
+  const bg = isLight ? '#fff' : '#0d1b2e';
+  const fg = isLight ? '#333' : '#f1f5f9';
+  const hoverBg = isLight ? '#f0f0f0' : 'rgba(204,26,26,0.15)';
+  const subFg = isLight ? '#888' : 'rgba(255,255,255,0.4)';
+  const border = isLight ? '#eee' : 'rgba(255,255,255,0.07)';
+  const hlColor = isLight ? '#a30000' : '#ff6666';
+
+  dd.style.background = bg;
+  dd.innerHTML = ids.map(id => {
+    const d = FTAP_DATA[id];
+    const label = highlight
+      ? id.replace(new RegExp(highlight, 'gi'), m => `<strong style="color:${hlColor};">${m}</strong>`)
+      : id;
+    return `<div onclick="ftapSelect('${id}')"
+      style="padding:8px 12px;cursor:pointer;border-bottom:0.5px solid ${border};font-size:13px;display:flex;justify-content:space-between;align-items:center;background:${bg};color:${fg};"
+      onmouseenter="this.style.background='${hoverBg}'" onmouseleave="this.style.background='${bg}'">
+      <span>${label}</span>
+      <span style="font-size:11px;color:${subFg};margin-left:12px;">${d.province}</span>
+    </div>`;
+  }).join('');
+}
+
+function ftapSelect(id) {
+  document.getElementById('f-ftap-id-input').value = id;
+  document.getElementById('f-ftap-id').value = id;
+  document.getElementById('ftap-dropdown').style.display = 'none';
+  autoFillSiteInfo(id);
+}
+
+function ftapHide() {
+  document.getElementById('ftap-dropdown').style.display = 'none';
+  // If typed value doesn't match any ID, clear
+  const input = document.getElementById('f-ftap-id-input').value.trim();
+  if (!FTAP_DATA[input]) {
+    document.getElementById('f-ftap-id').value = '';
+  }
+}
+
+function autoFillSiteInfo(ftapId) {
+  const data = FTAP_DATA[ftapId];
+  if (data) {
+    document.getElementById('f-area').value = data.area || '';
+    document.getElementById('f-province').value = data.province || '';
+    document.getElementById('f-mno-site-id').value = data.anchor || '';
+  } else {
+    document.getElementById('f-area').value = '';
+    document.getElementById('f-province').value = '';
+    document.getElementById('f-mno-site-id').value = '';
+  }
+}
+
+function handleOther(sel, otherId) {
+  const otherInput = document.getElementById(otherId);
+  if (sel.value === '__other__') {
+    otherInput.style.display = 'block';
+    otherInput.focus();
+  } else {
+    otherInput.style.display = 'none';
+    otherInput.value = '';
+  }
+}
+
+function getFieldValue(selId, otherId) {
+  const sel = document.getElementById(selId);
+  if (sel.value === '__other__') {
+    const other = document.getElementById(otherId).value.trim();
+    return other ? 'Others: ' + other : '';
+  }
+  return sel.value;
+}
+
+function buildRectifierGroups(val) {
+  const container = document.getElementById('rectifier-groups');
+  container.innerHTML = '';
+  const n = parseInt(val);
+  if (!n || n < 1 || n > 6) return;
+
+  const lightInput = 'width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+  const lightSelect = 'width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+  const lightOther = 'display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+
+  for (let i = 1; i <= n; i++) {
+    const label = `Rectifier ${i}`;
+    const block = document.createElement('div');
+    block.style.cssText = 'border:1px solid rgba(204,26,26,0.3);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:rgba(255,255,255,0.04);';
+    block.innerHTML = `
+      <div style="font-size:12px;font-weight:700;color:#cc1a1a;letter-spacing:1px;margin-bottom:12px;text-transform:uppercase;">${label}</div>
+      <div class="field-row">
+        <div class="field">
+          <label style="color:#444;">MAKE OF RECTIFIER SYSTEM (${label})</label>
+          <input type="text" id="sf-rect-make-${i}" placeholder="e.g. Huawei, ZTE"
+            style="${lightInput}"
+            onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'">
+        </div>
+        <div class="field">
+          <label style="color:#444;">NO. OF RECTIFIER MODULES (${label})</label>
+          <select id="sf-rect-modules-${i}"
+            onchange="handleOther(this,'sf-rect-modules-${i}-other'); buildModuleRatings(${i}, this.value)"
+            style="${lightSelect}">
+            <option value="">— Select —</option>
+            <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option>
+            <option>5</option><option>6</option><option>7</option><option>8</option><option>9</option>
+            <option>10</option><option>11</option><option>12</option><option>13</option><option>14</option>
+            <option>15</option><option>16</option>
+            <option value="__other__">Others:</option>
+          </select>
+          <input type="text" id="sf-rect-modules-${i}-other" placeholder="Please specify..." class="other-input"
+            style="${lightOther}"
+            onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'">
+        </div>
+      </div>
+      <!-- Dynamic module rating rows injected here -->
+      <div id="sf-rect-modratings-${i}"></div>
+      <div class="field-row">
+        <div class="field">
+          <label style="color:#444;">RECTIFIER CAPACITY (${label})</label>
+          <input type="text" id="sf-rect-cap-${i}" placeholder="e.g. 48000 W"
+            style="${lightInput}"
+            onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'">
+        </div>
+        <div class="field"></div>
+      </div>`;
+    container.appendChild(block);
+  }
+}
+
+function buildAcuMakes(val) {
+  const container = document.getElementById('acu-make-groups');
+  container.innerHTML = '';
+  const n = parseInt(val);
+  if (!n || n < 1 || n > 8) return;
+
+  const makes = ['Condura','Carrier','Daikin','Hitachi','Koppel','LG','Panasonic','Mitsubishi'];
+  const makeOptions = makes.map(m => `<option>${m}</option>`).join('');
+  const lightSelect = 'width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+
+  for (let i = 1; i <= n; i += 2) {
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    let cols = '';
+    for (let k = i; k <= Math.min(i + 1, n); k++) {
+      cols += `
+        <div class="field">
+          <label style="color:rgba(255,255,255,0.75);">MAKE OF ACU ${k}</label>
+          <select id="sf-acu-make-${k}" onchange="handleOther(this,'sf-acu-make-${k}-other')"
+            style="${lightSelect}">
+            <option value="">— Select —</option>
+            ${makeOptions}
+            <option value="__other__">Others:</option>
+          </select>
+          <input type="text" id="sf-acu-make-${k}-other" placeholder="Please specify..." class="other-input"
+            style="display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;">
+        </div>`;
+    }
+    if (n % 2 !== 0 && i === n) cols += `<div class="field"></div>`;
+    row.innerHTML = cols;
+    container.appendChild(row);
+  }
+}
+
+function buildModuleRatings(rectIdx, val) {
+  const container = document.getElementById(`sf-rect-modratings-${rectIdx}`);
+  if (!container) return;
+  container.innerHTML = '';
+  const m = parseInt(val);
+  if (!m || m < 1 || m > 16) return;
+
+  const label = `Rectifier ${rectIdx}`;
+  const lightSelect = 'width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+  const lightOther = 'display:none;margin-top:6px;width:100%;padding:9px 12px;border:1px solid #ccc;border-radius:8px;font-size:13px;font-family:inherit;outline:none;background:#fff;color:#111;';
+
+  for (let j = 1; j <= m; j += 2) {
+    const row = document.createElement('div');
+    row.className = 'field-row';
+    let cols = '';
+    for (let k = j; k <= Math.min(j + 1, m); k++) {
+      cols += `
+        <div class="field">
+          <label style="color:rgba(255,255,255,0.75);font-size:12px;">RATING FOR RECTIFIER MODULE ${k} (${label})</label>
+          <select id="sf-rect-rating-${rectIdx}-${k}"
+            onchange="handleOther(this,'sf-rect-rating-${rectIdx}-${k}-other')"
+            style="${lightSelect}">
+            <option value="">— Select —</option>
+            <option>2000</option><option>2500</option><option>3000</option><option>4000</option>
+            <option value="__other__">Others:</option>
+          </select>
+          <input type="text" id="sf-rect-rating-${rectIdx}-${k}-other" placeholder="Please specify..."
+            style="${lightOther}"
+            onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'">
+        </div>`;
+    }
+    if (m % 2 !== 0 && j === m) cols += `<div class="field"></div>`;
+    row.innerHTML = cols;
+    container.appendChild(row);
+  }
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────
+
+const USERS = [
+  { name: "Daniel James Clarin",       email: "daniel.clarin@frontiertowersphilippines.com",    role: "admin", area: "Overall" },
+  { name: "Clarence Del Carmen",       email: "clarence.delcarmen@frontiertowersphilippines.com", role: "admin", area: "Overall" },
+  { name: "Ashish Sisodia",            email: "ashish.sisodia@frontiertowersphilippines.com",    role: "admin", area: "Overall" },
+  { name: "Rebecca Sorreda",           email: "rebecca.sorreda@frontiertowersphilippines.com",   role: "admin", area: "Overall" },
+  { name: "Aldrin Aquino",             email: "aldrin.aquino@frontiertowersphilippines.com",     role: "ps",    area: "NCR/NLUZ" },
+  { name: "Jeffrey Cauilan",           email: "jeffrey.cauilan@frontiertowersphilippines.com",   role: "ps",    area: "SLUZ" },
+  { name: "Michael Andrew Barcelon",   email: "michael.barcelon@frontiertowersphilippines.com",  role: "ps",    area: "VIS" },
+  { name: "Merbounne Miomio",          email: "merbounne.miomio@frontiertowersphilippines.com",  role: "ps",    area: "MIN" },
+  { name: "April Dream Torino",        email: "april.torino@frontiertowersphilippines.com",      role: "ps",    area: "MIN" }
+];
+
+const SPECIALIST_NAMES = USERS.filter(u => u.role === 'ps').map(u => u.name);
+
+const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS_FULL  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+// Each question: { text, fields: [{label, type, options?}] }
+// types: 'result_ok_notok', 'result_yes_no', 'dropdown', 'freetext', 'photo'
+const QUESTIONS = [
+  { section: "GRID", items: [
+    {
+      text: "Check the functionality of Grid Meter/MCCB Box (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check the Cable specification (Service Drop wire to MCCB) as per site load condition (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["8 sqmm","14 sqmm","22 sqmm","30 sqmm","38 sqmm","50 sqmm","60 sqmm","80 sqmm","100 sqmm","120 sqmm"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check the Cable specification (MCCB o/p to ATS) as per site load condition (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["8 sqmm","14 sqmm","22 sqmm","30 sqmm","38 sqmm","50 sqmm","60 sqmm","80 sqmm","100 sqmm","120 sqmm"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check for Grid connection as per desired load (Visual / Last Bill of Grid)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["Permanent","Tempo (Lessor)","Tempo (Common Transformer)","Prime","Tempo-Prime"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are the ECB/MCB kept enclosed? (Electrical Board mains shall be enclosed to protect unauthorized / accidental contact) (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Grid Status upon visit (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["Connected","Disconnected (Busted Fuse Link)","Disconnected (Busted Transformer)","Disconnected (Burnt EM)"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are cable routes and ACPDB free from loose wiring, no by pass, cable-cuts or damage? (No cuts on cables; cables must not pass across sharp edges; no temporary joints without insulation taping) (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is MCB/ECB waterproof or placed in an enclosure (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "ELECTRICAL", items: [
+    {
+      text: "Is the Electrical installation line-diagram displayed at the site? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is the exposed un-armored/Copper cable from Genset to shelter in GI conduit or covered with perforated cable tray? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is there a 3 pin, 5 Amps / 15 Amps, plug & socket provided with adequate earthing? (Manually)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "For OD sites are all switches and sockets waterproof / rain protected? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is ECB, ACPDB free from loose connections, holes/gaps and properly fitted with lugs? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are the cable glands correctly fitted and sealed? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are cables free from cut, temporary joints without insulating tapping? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are all terminal connections free of loose connections to avoid further risks. (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are all incoming and outgoing cables properly tagged? (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check no multiple output from single Breaker (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "ATS", items: [
+    {
+      text: "Automation Check (Manually)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["Fuel Level Low","Low Pressure","Low Frequency","Low RPM","Over voltage","Under voltage"] },
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Alarms check (Manually)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "DG Start command (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["Automated via ATS","Automated via ATS w/ Battery-DG Cycle","Not Automated/Bypassed"] },
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "DG stop pulse duration (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check Output current (Manually)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check no MCB / Contactor / Electrical unit bypass (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check for tampering and loose connections (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Cable Installation - No cuts on cables, No temporary joints, Check for visible signs of sparking / burning / heating / blackening, etc (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "RECTIFIER SYSTEM", items: [
+    {
+      text: "Output Bus voltage (Visual)",
+      fields: [
+        { label: "Specifications", type: "freetext" },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check set battery charging current as per requirement (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["5%","10%","15%","20%","25%","30%"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check no tampering, loose contacts and no multiple output from same MCB (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check no bypassing of LLVD and BLVD (Check LLVD - 46V and BLVD - 44V) (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check Float Voltage setting (Visual)",
+      fields: [
+        { label: "Specifications", type: "freetext" },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check for any faulty rectifier and major alarm (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check Rectifier Output limit Set Shall be Equal or Below Module Capacity / 53.4V (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "ACU", items: [
+    {
+      text: "Check the health/condition of ACU (Thermometer)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Temperature setting and controller status (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["16 Deg. C","17 Deg. C","18 Deg. C","19 Deg. C","20 Deg. C","21 Deg. C","22 Deg. C","23 Deg. C","24 Deg. C","25 Deg. C","26 Deg. C","27 Deg. C","28 Deg. C"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Details of upgrade required (if critical, highlight) (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["16 Deg. C","17 Deg. C","18 Deg. C","19 Deg. C","20 Deg. C","21 Deg. C","22 Deg. C","23 Deg. C","24 Deg. C","25 Deg. C","26 Deg. C","27 Deg. C","28 Deg. C"] },
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check availability and functionality of temp sensors (Manual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is Aircon power unit supply given using MCB & is MCB working properly? (Check MCB rating and check that it is not bypassed or tapped) (Aircon power supply shall be controlled with MCB) (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Available ACU Automation via DTS",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "BATTERY BANK UNIT", items: [
+    {
+      text: "Check BBU capacity with respect to load (Backup time) (Visual)",
+      fields: [
+        { label: "Specifications", type: "dropdown", options: ["Within 4 Hour BBU","Below 4 Hour BBU"] },
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Check for proper termination with lugs and no oxide formation on terminals (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Open Circuit Bank Voltage (via BMS/Multimeter)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Any Damaged or Dead Cells (BMS)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Upgradation or Replacement required (Visual)",
+      fields: [
+        { label: "Result", type: "result_required_notrequired" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Is the battery bank maintained in good condition? (There shall be no bulging/leakage from the battery bank; battery terminals must be tightened; vent caps mounted & tightened; battery terminal cover provided) (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "Are proper interconnections used for the battery bank (Visual)",
+      fields: [
+        { label: "Result", type: "result_ok_notok" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    },
+    {
+      text: "BMS/RS485 Connection of Battery is properly connected and integrated (Visual)",
+      fields: [
+        { label: "Result", type: "result_yes_no" },
+        { label: "Comments/Recommendations", type: "freetext" },
+        { label: "Photo Evidence", type: "photo" }
+      ]
+    }
+  ]},
+  { section: "GENSET", items: [
+    { text: "Check Genset capacity with respect to load (Computation)", fields: [{ label: "Result", type: "result_ok_notok" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check functionality of Genset stop solenoid, exhaust fan (Manually)", fields: [{ label: "Result", type: "result_ok_notok" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Protection - Genset to trip off in case of HCT/HWT (Manually)", fields: [{ label: "Result", type: "result_ok_notok" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Genset neutral and body earthing provided (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Genset output to ATS (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Cable Installation - No cuts on cables, No temporary joints, Check for visible signs of sparking / burning / heating / blackening, etc (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is there visible leakage of diesel around Genset and is the Genset battery in good condition? (There shall be no leakage from Genset; If it is there, separate container shall be kept to collect the leaking diesel; and the Genset fuel inlet closed and secured; Battery condition to be checked) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is Genset emergency stop in working condition (Manually)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is Genset hour meter free from damage and is it properly protected? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset fuel inlet and External Fuel Day Tank closed and secured (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset foundation free from cracks (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset located in a proper & ventilated area (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset canopy door lock system working properly (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset door glass available or not (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "If the Genset is in enclosed space - exhaust pipe leading beyond roof by 1 meter (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the glands provided for Genset cable entries (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the canopy free from rust and heavy dent (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "EARTHING", items: [
+    { text: "All the equipment inside the shelter are grounded (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Internal grounding bar (IGB) is connected to External grounding bar (EGB) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "EGB is connected to earthing pit (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check earth resistance value for individual earth pits (Ground Testing is <=5 ohms)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check for Lightening arrester (LA) and earthing connection of LA to Testpit (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is there at least 1 earth pit maintained properly? (Masonry work should not be damaged; hinged covers provided over test pits) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is there proper body earthing for pole/tower legs, all electrical equipment/panels/distribution boards/shelter frame & metal support frames e.g. cable tray, battery metal racks etc.? (Check for proper fixing of all earthing wires to equipment; visible earthing wires must not be damaged or broken) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Genset Neutral exclusively connected to the third Earth Pit? (Check for separate Earthing of Genset Neutral and Body where 3 Earth Pits are available. If two Earth Pits are available, the answer should be negative) (Separate pit required only for 3 phase Genset only) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is ECB/ACPDB/ATS/MTS box earthing done? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "ENERGY", items: [
+    { text: "Is Acrel Meter present on-site and properly integrated to RMS? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "The non critical load of Each MNO should be routed from designated LLVD only (Eg RRU, BTS/ENB/DU/BB) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "The Critical DC load of each MNO should be routed from designated BLVD only (Eg Cell site router, MW/Transmission equipment etc) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Acrel Meter accuracy (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "No load to be directly connected to Battery/battery fuse terminals (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Labeling of operator on each Channels/meter for identification (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Whether the DC meter should be protected from Rain water? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "FIRE", items: [
+    { text: "Is there a 2.5 kg ABC or CO2 type Fire extinguisher provided and maintained in working condition (Please check refill date/expiry date)? In case of Critical sites, a gas based fire suppression system must be in working condition? (Fire extinguisher shall be easily accessible; for ABC units - the needle on the gauge shall be in the green zone; for CO2 units - check by opening the valve) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are fire & smoke detectors in working condition and a battery back up provided? (The fire & smoke sensor LED must blink at regular intervals; in case of AC supply failure this can be tested by switching off the main supply to the fire alarm panel) (Battery Back is applicable in case of Non ATS sites)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "EMERGENCY", items: [
+    { text: "Are emergency contact nos. provided and updated? (List of emergency contact nos. shall be provided in English/local language & the date provided when last updated within 6 months) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "HOUSEKEEPING", items: [
+    { text: "Is the site free from unwanted materials and garbage? (Leftover materials during deployment/O&M shall not be left at the site) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is unwanted vegetation removed from the site? (Vegetation should not impact on the safe operation of the site) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "GENERAL", items: [
+    { text: "Are the three (03) standard safety signs (Shelter entrance, site entrance and Tower) and danger notice displayed in English/local language at the site and maintained in good condition. (Standard safety signs like use safety Helmet/Safety Belt/Safety shoes. No smoking, No tobacco No drinking etc shall be displayed and easily visible) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the tower maintained free from bee-hives or bird nests? (Inspection is needed from four positions to identify the location of bee-hives and birds nests) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is there parapet wall / Safety Railings on the site (In case of RTT and RTP) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are Do's and Don'ts displayed on the site (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "ACCESS", items: [
+    { text: "Is the site locked and secure to avoid unauthorized access? (The compound and shelter must be locked and perimeter fence designed to discourage access from children/Unauthorized person) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is there safe access to the site, shelter, tower, pole? (Walkways/routes must be free from slipping/tripping hazards, obstacles or vegetation) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is BTS/tower/pole access path/perimeter lighting, working and providing adequate illumination? (All lights must be working properly without blinking or flickering) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the compound wall/barbed wire/railing maintained in good condition? (Compound wall & railing must not be damaged, barbed wire shall be fixed properly/not hanging) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "SHELTER/CABIN", items: [
+    { text: "Is the access stair to the shelter maintained in good condition? (Access stair shall be grouted and fixed to the shelter) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are there any open holes in the floor/wall/roof of the shelter? (Open holes can cause unwanted access for rats/snakes/water etc; ensure that all cable-passes are sealed, check for marks from water leaks) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are electrical panel safety requirements maintained? (ISI-Mark rubber mat laid in front of the panel; danger sign provided on the panel; panel closed) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the shelter free of combustible/inflammable materials? (No storage of diesel, paint, boxes, bedding and other combustible items in the shelter) (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Equipment as per Layout (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are all doors latches and e-locking system working properly (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is Shelter Floor sagged", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "TOWER", items: [
+    { text: "Are all nuts & bolts in place properly tightened at the base of the tower? (Torque Wrench)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Does the vertical climbing ladder have adequate safety", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the base plate grouted where not encased in concrete? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the base plate encased in concrete? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check for tower yard/perimeter lights and any power cable (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check for missing members (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check for foundation cracks (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are the cable tray laid and dressed properly? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Are cables laid vertically in cable tray and in safe manner? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Check for lock-nut for the foundation bolts or chiseling/welding on thread (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Is the Aviation lamp/light fixed and functional? (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "SRN", items: [
+    { text: "Check for tampering and loose connections (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]},
+  { section: "SECURITY", items: [
+    { text: "Cable Installation - No cuts on cables, No temporary joints, Check for visible signs of sparking / burning / heating / blackening, etc (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Intact Anti-Theft Box from ODC (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] },
+    { text: "Signs of stolen assets/facility/fuel (Visual)", fields: [{ label: "Result", type: "result_yes_no" },{ label: "Comments/Recommendations", type: "freetext" },{ label: "Photo Evidence", type: "photo" }] }
+  ]}
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+
+let currentRole = 'ps';
+let currentUser = null;
+let answers = {};
+let overallResult = null;
+let photos = [];
+let allReports = [];
+let filteredReports = [];
+let currentPage = 1;
+const PAGE_SIZE = 25;
+let sortCol = 'date';
+let sortDir = 'desc';
+
+// ── GENERATE DEMO DATA ────────────────────────────────────────────────────
+
+function generateReports() {
+  allReports = [];
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────
+
+function togglePassword() {
+  const input = document.getElementById('login-pass');
+  const btn = document.getElementById('pass-toggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '👁️';
+  } else {
+    input.type = 'password';
+    btn.textContent = '🙈';
+  }
+}
+
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+// Close settings panel when clicking outside
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('settings-panel');
+  const btn = document.getElementById('settings-btn');
+  if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.style.display = 'none';
+  }
+});
+
+function setTheme(theme) {
+  const body = document.body;
+  const darkBtn  = document.getElementById('btn-dark-mode');
+  const lightBtn = document.getElementById('btn-light-mode');
+  if (theme === 'light') {
+    body.classList.add('light-theme');
+    if (darkBtn)  { darkBtn.style.background  = 'rgba(255,255,255,0.04)'; darkBtn.style.borderColor  = 'rgba(255,255,255,0.1)'; darkBtn.style.color  = 'rgba(255,255,255,0.5)'; }
+    if (lightBtn) { lightBtn.style.background = 'rgba(255,255,255,0.18)'; lightBtn.style.borderColor = 'rgba(255,255,255,0.5)'; lightBtn.style.color = '#f1f5f9'; }
+  } else {
+    body.classList.remove('light-theme');
+    if (darkBtn)  { darkBtn.style.background  = 'rgba(255,255,255,0.18)'; darkBtn.style.borderColor  = 'rgba(255,255,255,0.5)'; darkBtn.style.color  = '#f1f5f9'; }
+    if (lightBtn) { lightBtn.style.background = 'rgba(255,255,255,0.04)'; lightBtn.style.borderColor = 'rgba(255,255,255,0.1)'; lightBtn.style.color = 'rgba(255,255,255,0.5)'; }
+  }
+  localStorage.setItem('ftap-theme', theme);
+}
+
+function setFontSize(size) {
+  const body = document.body;
+  body.classList.remove('font-small', 'font-large');
+  if (size !== 'medium') body.classList.add('font-' + size);
+  const isLight = body.classList.contains('light-theme');
+  const activeBg    = isLight ? '#e8e8e8' : 'rgba(255,255,255,0.18)';
+  const activeBorder= isLight ? '#bbb'    : 'rgba(255,255,255,0.5)';
+  const activeColor = isLight ? '#1a1a2e' : '#f1f5f9';
+  const inactiveBg    = isLight ? '#f5f5f5' : 'rgba(255,255,255,0.04)';
+  const inactiveBorder= isLight ? '#ddd'    : 'rgba(255,255,255,0.1)';
+  const inactiveColor = isLight ? '#888'    : 'rgba(255,255,255,0.5)';
+  ['small','medium','large'].forEach(s => {
+    const btn = document.getElementById('btn-font-' + s);
+    if (!btn) return;
+    if (s === size) {
+      btn.style.background  = activeBg;
+      btn.style.borderColor = activeBorder;
+      btn.style.color       = activeColor;
+    } else {
+      btn.style.background  = inactiveBg;
+      btn.style.borderColor = inactiveBorder;
+      btn.style.color       = inactiveColor;
+    }
+  });
+  localStorage.setItem('ftap-fontsize', size);
+}
+
+function toggleTheme() { /* legacy no-op */ }
+
+function applyStoredTheme() {
+  const theme    = localStorage.getItem('ftap-theme') || 'dark';
+  const fontsize = localStorage.getItem('ftap-fontsize') || 'medium';
+  setTheme(theme);
+  setFontSize(fontsize);
+}
+
+function populateLoginDropdown() { /* no-op — using text input now */ }
+function prefillPassword() { /* no-op */ }
+
+function doLogin() {
+  const typed = document.getElementById('login-user').value.trim();
+  const pass  = document.getElementById('login-pass').value.trim();
+  const hint  = document.getElementById('login-hint');
+
+  if (!typed) { hint.textContent = '⚠ Please enter your username.'; hint.style.color = '#E24B4A'; return; }
+  if (!pass)  { hint.textContent = '⚠ Please enter your password.'; hint.style.color = '#E24B4A'; return; }
+
+  // Match typed username (case-insensitive) against FirstnameLastname format
+  const user = USERS.find(u => {
+    const parts = u.name.trim().split(/\s+/);
+    const first = parts[0];
+    const last  = parts[parts.length - 1];
+    const expected = (first + last).toLowerCase();
+    return typed.toLowerCase() === expected;
+  });
+
+  if (!user) {
+    hint.textContent = '⚠ Username not found. Use format: FirstnameLastname (e.g. AldrinAquino)';
+    hint.style.color = '#E24B4A';
+    return;
+  }
+
+  // Password = first name lowercase
+  const firstName = user.name.trim().split(/\s+/)[0].toLowerCase();
+  if (pass !== firstName) {
+    hint.textContent = '⚠ Incorrect password.';
+    hint.style.color = '#E24B4A';
+    return;
+  }
+
+  const initials = user.name.split(/\s+/).filter((_,i,a) => i===0||i===a.length-1).map(w=>w[0]).join('').toUpperCase();
+  currentRole = user.role;
+  currentUser = { name: user.name, email: user.email, initials, role: user.role, area: user.area };
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'flex';
+  document.getElementById('user-avatar').textContent = initials;
+  document.getElementById('user-name').textContent = user.name;
+  document.getElementById('user-role-label').textContent = user.role === 'admin' ? `Admin — ${user.area}` : `Power Specialist — ${user.area}`;
+
+  // Role-based nav visibility
+  const adminOnly = ['nav-all-reports','nav-specialists','nav-extract'];
+  adminOnly.forEach(id => {
+    document.getElementById(id).style.display = currentRole === 'admin' ? 'block' : 'none';
+  });
+  document.getElementById('my-stats').style.display = currentRole === 'ps' ? 'grid' : 'none';
+
+  buildFtapDropdown();
+  buildQuestions();
+  populateFilters();
+  startDateTimeClock();
+
+  // Load reports from Google Sheet
+  showToast('⏳ Loading reports...');
+  loadReportsFromSheet().then(reports => {
+    allReports = reports;
+    filteredReports = [...allReports];
+    renderDashboard();
+    renderMyReports();
+    renderTable();
+    renderSpecialists();
+    showToast(`✓ Loaded ${reports.length} report${reports.length !== 1 ? 's' : ''}`);
+  });
+}
+
+let dateClockInterval = null;
+
+function formatDateTime(d) {
+  const pad = n => String(n).padStart(2, '0');
+  const date = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const time = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  return `${date} ${time}`;
+}
+
+function startDateTimeClock() {
+  if (dateClockInterval) clearInterval(dateClockInterval);
+  const el = document.getElementById('f-date');
+  if (!el) return;
+  el.value = formatDateTime(new Date());
+  dateClockInterval = setInterval(() => {
+    const field = document.getElementById('f-date');
+    if (field) field.value = formatDateTime(new Date());
+  }, 1000);
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('login-hint').textContent = '';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-dashboard').classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.nav-btn').classList.add('active');
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────
+
+function showPage(p, btn) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  if (btn) btn.classList.add('active');
+  // Request location fresh every time user opens Submit Report
+  if (p === 'submit') {
+    requestLocation();
+  }
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────
+
+function renderDashboard() {
+  const now = new Date();
+  const thisMonth = now.getMonth() + 1, thisYear = now.getFullYear();
+  const total = allReports.length;
+  const monthCount = allReports.filter(r => r.month === thisMonth && r.year === thisYear).length;
+  const yearCount  = allReports.filter(r => r.year === thisYear).length;
+  const ok    = allReports.filter(r => r.result === 'ok').length;
+  const notok = allReports.filter(r => r.result === 'notok').length;
+
+  document.getElementById('d-total').textContent  = total.toLocaleString();
+  document.getElementById('d-month').textContent  = monthCount.toLocaleString();
+  document.getElementById('d-year').textContent   = yearCount.toLocaleString();
+  document.getElementById('d-ok').textContent     = ok.toLocaleString();
+  document.getElementById('d-notok').textContent  = notok.toLocaleString();
+
+  // PS personal stats
+  if (currentRole === 'ps') {
+    const psReports = allReports.filter(r => r.specialist === currentUser.name && r.year === thisYear && r.month === thisMonth);
+    document.getElementById('my-visited').textContent = psReports.length;
+  }
+
+  // Monthly grid
+  const monthGrid = document.getElementById('month-grid');
+  monthGrid.innerHTML = MONTHS_SHORT.map((m, i) => {
+    const c = allReports.filter(r => r.month === i+1 && r.year === thisYear).length;
+    return `<div class="month-cell ${c > 0 ? 'has-data' : ''} ${i+1 === thisMonth ? 'current' : ''}">
+      <div class="month-name">${m}</div>
+      <div class="month-count">${c > 0 ? c.toLocaleString() : '—'}</div>
+    </div>`;
+  }).join('');
+
+  // Performance list
+  const perfData = SPECIALIST_NAMES.map(name => {
+    const visited = allReports.filter(r => r.specialist === name && r.year === thisYear).length;
+    return { name, visited, pct: Math.min(Math.round((visited / 600) * 100), 100) };
+  }).sort((a, b) => b.pct - a.pct);
+
+  document.getElementById('perf-list').innerHTML = perfData.map(s => `
+    <div class="perf-row">
+      <div class="perf-name">${s.name}</div>
+      <div class="prog-bar" style="flex:1;min-width:80px;"><div class="prog-fill" style="width:${s.pct}%"></div></div>
+      <div class="prog-pct">${s.pct}%</div>
+      <div class="perf-visited">${s.visited}</div>
+    </div>`).join('');
+}
+
+// ── BUILD QUESTIONS ───────────────────────────────────────────────────────
+
+let qPhotoData = {}; // stores per-question photo blobs
+
+function buildQuestions() {
+  const container = document.getElementById('questions-container');
+  let qNum = 1;
+  let html = '';
+  const sqmmOpts = ["8 sqmm","14 sqmm","22 sqmm","30 sqmm","38 sqmm","50 sqmm","60 sqmm","80 sqmm","100 sqmm","120 sqmm"];
+
+  QUESTIONS.forEach(({ section, items }) => {
+    html += `<div class="form-section-title">${section}</div>`;
+    items.forEach(q => {
+      const n = qNum;
+      html += `<div class="q-block" id="qblock-${n}" style="border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#ffffff;color:#1a1a1a;">`;
+      html += `<div style="display:flex;gap:10px;margin-bottom:10px;">
+        <div class="q-num" style="min-width:24px;padding-top:2px;color:#555;">${n}</div>
+        <div class="q-text" style="flex:1;font-weight:600;font-size:14px;line-height:1.6;color:#111;">${q.text}</div>
+      </div>`;
+      html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">`;
+
+      q.fields.forEach(f => {
+        const fid = `q${n}_${f.label.replace(/[^a-z0-9]/gi,'_').toLowerCase()}`;
+        if (f.type === 'result_ok_notok') {
+          html += `<div>
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <div style="display:flex;gap:6px;">
+              <button class="q-opt" id="${fid}_ok" onclick="setQAnswer('${fid}','Ok',this,'ok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">Ok</button>
+              <button class="q-opt" id="${fid}_notok" onclick="setQAnswer('${fid}','Not Ok',this,'notok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">Not Ok</button>
+            </div>
+          </div>`;
+        } else if (f.type === 'result_yes_no') {
+          html += `<div>
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <div style="display:flex;gap:6px;">
+              <button class="q-opt" id="${fid}_yes" onclick="setQAnswer('${fid}','Yes',this,'ok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">Yes</button>
+              <button class="q-opt" id="${fid}_no" onclick="setQAnswer('${fid}','No',this,'notok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">No</button>
+            </div>
+          </div>`;
+        } else if (f.type === 'result_required_notrequired') {
+          html += `<div>
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <div style="display:flex;gap:6px;">
+              <button class="q-opt" id="${fid}_req" onclick="setQAnswer('${fid}','Required',this,'notok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">Required</button>
+              <button class="q-opt" id="${fid}_notreq" onclick="setQAnswer('${fid}','Not Required',this,'ok')" style="flex:1;color:#333;border-color:#ccc;background:#f5f5f5;">Not Required</button>
+            </div>
+          </div>`;
+        } else if (f.type === 'dropdown') {
+          html += `<div>
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <select id="${fid}" onchange="qFieldChange(${n})"
+              style="width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;font-family:inherit;background:#fff;color:#111;outline:none;">
+              <option value="" style="background:#0d1b2e;color:#f1f5f9;">— Select —</option>
+              ${f.options.map(o => `<option>${o}</option>`).join('')}
+              <option value="__other__">Others:</option>
+            </select>
+            <input type="text" id="${fid}_other" placeholder="Please specify..." style="display:none;margin-top:5px;width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;font-family:inherit;outline:none;color:#111;background:#fff;"
+              onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'"
+              oninput="qFieldChange(${n})">
+          </div>`;
+        } else if (f.type === 'freetext') {
+          html += `<div style="grid-column:span 2;">
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <textarea id="${fid}" rows="2" placeholder="Enter comments or recommendations..."
+              style="width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:7px;font-size:13px;font-family:inherit;resize:vertical;outline:none;color:#111;background:#fff;"
+              onfocus="this.style.borderColor='#cc1a1a'" onblur="this.style.borderColor='#ccc'"
+              oninput="qFieldChange(${n})"></textarea>
+          </div>`;
+        } else if (f.type === 'photo') {
+          html += `<div style="grid-column:span 2;">
+            <label style="font-size:11px;color:#444;font-weight:700;letter-spacing:0.3px;display:block;margin-bottom:4px;">${f.label.toUpperCase()}</label>
+            <div onclick="triggerQPhoto(${n})"
+              style="border:1.5px dashed #ccc;border-radius:8px;padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;background:#f9f9f9;transition:border-color 0.15s;"
+              onmouseenter="this.style.borderColor='#cc1a1a'" onmouseleave="this.style.borderColor='#ccc'">
+              <span style="font-size:16px;">📷</span>
+              <span style="font-size:13px;color:#444;font-weight:500;">Tap to capture or upload photo</span>
+            </div>
+            <input type="file" id="qphoto-${n}" accept="image/*" multiple style="display:none" onchange="handleQPhoto(${n}, this)">
+            <div id="qphoto-thumbs-${n}" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;"></div>
+          </div>`;
+        }
+      });
+
+      html += `</div></div>`;
+      qNum++;
+    });
+  });
+
+  container.innerHTML = html;
+  // add onchange to dropdowns for Others reveal
+  document.querySelectorAll('#questions-container select').forEach(sel => {
+    sel.addEventListener('change', function() {
+      const otherId = this.id + '_other';
+      const otherEl = document.getElementById(otherId);
+      if (otherEl) {
+        otherEl.style.display = this.value === '__other__' ? 'block' : 'none';
+        if (this.value !== '__other__') otherEl.value = '';
+      }
+    });
+  });
+  updateQProgress();
+}
+
+function setQAnswer(fid, val, btn, cls) {
+  // deselect siblings in same button group
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.q-opt').forEach(b => b.className = 'q-opt');
+  btn.classList.add('sel-' + cls);
+  answers[fid] = val;
+  updateQProgress();
+}
+
+function qFieldChange(n) {
+  // mark question as touched for progress
+  answers['q' + n + '_touched'] = true;
+  updateQProgress();
+}
+
+// ── GEOLOCATION ───────────────────────────────────────────────────────────
+
+let cachedLocation = null;
+
+function updateGeoStatus(state, loc) {
+  const statusEl = document.getElementById('geo-status');
+  const btnEl    = document.getElementById('geo-enable-btn');
+  const barEl    = document.getElementById('geo-status-bar');
+  if (!statusEl) return;
+
+  if (state === 'detecting') {
+    statusEl.textContent = '📍 Detecting location...';
+    statusEl.style.color = 'rgba(255,255,255,0.5)';
+    if (btnEl) btnEl.style.display = 'none';
+  } else if (state === 'ready') {
+    statusEl.textContent = `📍 ${loc.lat}, ${loc.lng}  (±${loc.acc}m)`;
+    statusEl.style.color = '#4ade80';
+    if (btnEl) btnEl.style.display = 'none';
+    if (barEl) { barEl.style.background = 'rgba(74,222,128,0.08)'; barEl.style.borderColor = 'rgba(74,222,128,0.25)'; }
+  } else if (state === 'denied') {
+    statusEl.textContent = '⚠ Location denied — photos will have no geotag';
+    statusEl.style.color = '#f87171';
+    if (btnEl) { btnEl.textContent = 'Try Again'; btnEl.style.display = 'inline-block'; }
+    if (barEl) { barEl.style.background = 'rgba(248,113,113,0.08)'; barEl.style.borderColor = 'rgba(248,113,113,0.2)'; }
+  } else if (state === 'unavailable') {
+    statusEl.textContent = '⚠ GPS unavailable on this device';
+    statusEl.style.color = '#fbbf24';
+    if (btnEl) btnEl.style.display = 'none';
+  }
+}
+
+function requestLocation() {
+  updateGeoStatus('detecting');
+  if (!navigator.geolocation) {
+    updateGeoStatus('unavailable');
+    return Promise.resolve(null);
+  }
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        cachedLocation = {
+          lat: pos.coords.latitude.toFixed(6),
+          lng: pos.coords.longitude.toFixed(6),
+          acc: Math.round(pos.coords.accuracy)
+        };
+        updateGeoStatus('ready', cachedLocation);
+        resolve(cachedLocation);
+      },
+      err => {
+        if (err.code === 1) {
+          updateGeoStatus('denied');
+        } else {
+          updateGeoStatus('unavailable');
+        }
+        resolve(cachedLocation); // use cached if available
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
+}
+
+function getLocation() {
+  // If we already have a fresh location, return it immediately
+  if (cachedLocation) return Promise.resolve(cachedLocation);
+  return requestLocation();
+}
+
+// Pre-fetch location when camera button is tapped
+function triggerQPhoto(n) {
+  const input = document.getElementById('qphoto-' + n);
+  if (!input) return;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isMobile) {
+    input.setAttribute('capture', 'environment');
+  } else {
+    input.removeAttribute('capture');
+  }
+  // Start fetching location immediately so it's ready when photo is taken
+  getLocation();
+  input.value = '';
+  input.click();
+}
+
+function handleQPhoto(n, input) {
+  if (!qPhotoData[n]) qPhotoData[n] = [];
+  const files = Array.from(input.files);
+  let loaded = 0;
+  if (!files.length) return;
+
+  // Get location at the moment of photo selection
+  getLocation().then(loc => {
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // Stamp geotag onto image using canvas
+          const canvas = document.createElement('canvas');
+          canvas.width  = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          if (loc) {
+            const tag = `📍 ${loc.lat}, ${loc.lng}`;
+            const timestamp = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+            const fontSize = Math.max(14, Math.round(img.width * 0.022));
+            ctx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+
+            // Background strip at bottom
+            const padY = fontSize * 0.6;
+            const stripH = fontSize * 2.8;
+            ctx.fillStyle = 'rgba(0,0,0,0.55)';
+            ctx.fillRect(0, img.height - stripH, img.width, stripH);
+
+            // Geotag text
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(tag, fontSize * 0.5, img.height - stripH + fontSize * 1.3);
+
+            // Timestamp
+            ctx.font = `${Math.round(fontSize * 0.8)}px 'Segoe UI', sans-serif`;
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            ctx.fillText(timestamp, fontSize * 0.5, img.height - stripH + fontSize * 2.4);
+          }
+
+          const geotaggedUrl = canvas.toDataURL('image/jpeg', 0.92);
+          qPhotoData[n].push({
+            name: file.name,
+            url: geotaggedUrl,
+            lat: loc ? loc.lat : null,
+            lng: loc ? loc.lng : null
+          });
+          loaded++;
+          if (loaded === files.length) renderQThumbs(n);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
+function renderQThumbs(n) {
+  const container = document.getElementById('qphoto-thumbs-' + n);
+  if (!container) return;
+  container.innerHTML = (qPhotoData[n] || []).map((p, i) => {
+    const geoTag = p.lat ? `<div title="${p.lat}, ${p.lng}" style="position:absolute;bottom:2px;left:2px;background:rgba(0,0,0,0.6);color:#fff;font-size:8px;padding:1px 4px;border-radius:3px;white-space:nowrap;max-width:52px;overflow:hidden;text-overflow:ellipsis;">📍</div>` : '';
+    return `<div style="position:relative;width:56px;height:56px;border-radius:7px;overflow:hidden;background:#eee;flex-shrink:0;">
+      <img src="${p.url}" style="width:100%;height:100%;object-fit:cover;">
+      ${geoTag}
+      <div onclick="removeQPhoto(${n},${i})" style="position:absolute;top:2px;right:2px;width:16px;height:16px;background:rgba(0,0,0,0.55);border-radius:50%;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;">×</div>
+    </div>`;
+  }).join('');
+}
+
+function removeQPhoto(n, i) {
+  if (qPhotoData[n]) qPhotoData[n].splice(i, 1);
+  renderQThumbs(n);
+}
+
+function updateQProgress() {
+  const total = QUESTIONS.reduce((s, sec) => s + sec.items.length, 0);
+  // count answered = questions where at least one Result field is set
+  const answered = Object.keys(answers).filter(k => k.includes('_result') || k.includes('_result_') || (k.startsWith('q') && !k.includes('touched'))).length;
+  const pct = Math.round((Object.keys(answers).length / Math.max(total, 1)) * 100);
+  const countEl = document.getElementById('ans-count');
+  const progEl = document.getElementById('form-progress');
+  if (countEl) countEl.textContent = Math.min(Object.keys(answers).length, total);
+  if (progEl) progEl.style.width = Math.min(pct, 100) + '%';
+}
+
+function setOverall(v) {
+  overallResult = v;
+  ['ok','notok'].forEach(x => {
+    const btn = document.getElementById('overall-' + x);
+    if (btn) btn.className = 'overall-btn' + (x === v ? ' sel-' + v : '');
+  });
+}
+
+// ── PHOTOS ────────────────────────────────────────────────────────────────
+
+function handlePhotos(e) {
+  Array.from(e.target.files).forEach(file => {
+    photos.push({ name: file.name, url: URL.createObjectURL(file) });
+  });
+  renderThumbs();
+}
+
+function renderThumbs() {
+  document.getElementById('photo-thumbs').innerHTML = photos.map((p, i) =>
+    `<div class="photo-thumb">
+      <img src="${p.url}" onerror="this.style.display='none'">
+      <div class="photo-del" onclick="removePhoto(${i})">×</div>
+    </div>`).join('');
+}
+
+function removePhoto(i) { photos.splice(i, 1); renderThumbs(); }
+
+// ── SUBMIT REPORT ─────────────────────────────────────────────────────────
+
+function submitReport() {
+  const ftapId = document.getElementById('f-ftap-id').value || document.getElementById('f-ftap-id-input').value.trim();
+  if (!ftapId) { showToast('⚠ Please select a FTAP ID'); return; }
+  if (!overallResult) { showToast('⚠ Please select an Overall Inspection Result'); return; }
+
+  const data = FTAP_DATA[ftapId] || {};
+  const rpt = {
+    id: 'RPT-' + String(Date.now()),
+    site: ftapId,
+    ftapId,
+    specialist: currentUser.name,
+    email: currentUser.email || '',
+    date: document.getElementById('f-date').value,
+    month: new Date().getMonth() + 1,
+    year: new Date().getFullYear(),
+    result: overallResult,
+    area: data.area || '',
+    province: data.province || '',
+    anchor: data.anchor || '',
+    mnoCount: document.getElementById('f-mno-count').value,
+    purpose: getFieldValue('f-purpose','f-purpose-other'),
+    powerModel: getFieldValue('f-power-model','f-power-model-other'),
+    rca: document.getElementById('f-rca').value,
+    recommendation: document.getElementById('f-recommendation').value,
+    photos: 0,
+    questions: Object.keys(answers).length
+  };
+
+  // Disable submit button while saving
+  const submitBtn = document.querySelector('.submit-bar .btn-primary');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Saving...'; }
+  showToast('⏳ Saving report...');
+
+  saveReportToSheet(rpt).then(success => {
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit Report →'; }
+    if (success) {
+      allReports.unshift(rpt);
+      filteredReports = [...allReports];
+      showToast('✓ Report saved to Google Sheets!');
+      clearForm();
+      renderDashboard();
+      renderMyReports();
+      renderTable();
+    } else {
+      showToast('✗ Save failed — check your internet connection');
+    }
+  });
+}
+
+function clearForm() {
+  answers = {}; overallResult = null; qPhotoData = {};
+  document.getElementById('f-ftap-id-input').value = '';
+  document.getElementById('f-ftap-id').value = '';
+  document.getElementById('ftap-dropdown').style.display = 'none';
+  document.getElementById('f-area').value = '';
+  document.getElementById('f-province').value = '';
+  document.getElementById('f-mno-site-id').value = '';
+  document.getElementById('f-mno-count').value = '';
+  document.getElementById('f-mno-count-other').style.display = 'none';
+  document.getElementById('f-mno-count-other').value = '';
+  document.getElementById('f-purpose').value = '';
+  document.getElementById('f-purpose-other').style.display = 'none';
+  document.getElementById('f-purpose-other').value = '';
+  document.getElementById('f-power-model').value = '';
+  document.getElementById('f-power-model-other').style.display = 'none';
+  document.getElementById('f-power-model-other').value = '';
+  document.getElementById('f-rca').value = '';
+  document.getElementById('f-recommendation').value = '';
+  // Site Facilities reset
+  const rmo = document.getElementById('sf-rect-modules-other');
+  if (rmo) { rmo.style.display = 'none'; rmo.value = ''; }
+  document.getElementById('sf-rect-count').value = '';
+  const rco = document.getElementById('sf-rect-count-other');
+  if (rco) { rco.style.display = 'none'; rco.value = ''; }
+  document.getElementById('rectifier-groups').innerHTML = '';
+  document.getElementById('acu-make-groups').innerHTML = '';
+  const sfFields = ['sf-transformer','sf-meter','sf-ats-rating','sf-ats-make',
+    'sf-genset-count','sf-genset-make','sf-genset-rating','sf-battery-count','sf-battery-type',
+    'sf-battery-make','sf-battery-rating',
+    'sf-acu-count','sf-acu-rating','sf-elock'];
+  sfFields.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+    const oth = document.getElementById(id + '-other');
+    if (oth) { oth.style.display = 'none'; oth.value = ''; }
+  });
+  ['sf-battery-capacity'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('ans-count').textContent = '0';
+  document.getElementById('form-progress').style.width = '0%';
+  buildQuestions(); // rebuilds all question fields fresh
+  ['ok','notok'].forEach(x => document.getElementById('overall-' + x).className = 'overall-btn');
+}
+
+// ── MY REPORTS ────────────────────────────────────────────────────────────
+
+function renderMyReports() {
+  const container = document.getElementById('my-reports-list');
+  const mine = allReports.filter(r => r.specialist === currentUser.name);
+  if (!mine.length) {
+    container.innerHTML = '<p style="font-size:13px;color:#aaa;padding:12px 0;">No reports submitted yet.</p>';
+    return;
+  }
+  container.innerHTML = mine.map(r => `
+    <div class="report-row">
+      <div style="width:32px;height:32px;border-radius:8px;background:${r.result==='ok'?'#EAF3DE':'#FCEBEB'};display:flex;align-items:center;justify-content:center;font-size:14px;">
+        ${r.result==='ok'?'✓':'✗'}
+      </div>
+      <div class="report-meta">
+        <strong>${r.site} — ${r.id}</strong>
+        <span>${r.date} · ${r.questions || 0} questions answered</span>
+      </div>
+      <span class="badge badge-${r.result==='ok'?'ok':'notok'}">${r.result==='ok'?'OK':'Not OK'}</span>
+    </div>`).join('');
+}
+
+// ── POPULATE FILTERS ──────────────────────────────────────────────────────
+
+function populateFilters() {
+  const specSel = document.getElementById('filter-specialist');
+  specSel.innerHTML = '<option value="">All Specialists</option>';
+  SPECIALIST_NAMES.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; specSel.appendChild(o); });
+
+  const monthSel = document.getElementById('filter-month');
+  monthSel.innerHTML = '<option value="">All Months</option>';
+  MONTHS_FULL.forEach((m, i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; monthSel.appendChild(o); });
+
+  const specMonSel = document.getElementById('spec-month');
+  specMonSel.innerHTML = '<option value="">All Months</option>';
+  MONTHS_FULL.forEach((m, i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; specMonSel.appendChild(o); });
+
+  const exSpec = document.getElementById('ex-spec');
+  exSpec.innerHTML = '<option value="">All Specialists (5)</option>';
+  SPECIALIST_NAMES.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; exSpec.appendChild(o); });
+
+  const exMon = document.getElementById('ex-month');
+  exMon.innerHTML = '<option value="">All Months</option>';
+  MONTHS_FULL.forEach((m, i) => { const o = document.createElement('option'); o.value = i+1; o.textContent = m; exMon.appendChild(o); });
+}
+
+// ── ALL REPORTS TABLE ─────────────────────────────────────────────────────
+
+function filterReports() {
+  const q    = document.getElementById('search-input').value.toLowerCase();
+  const spec = document.getElementById('filter-specialist').value;
+  const res  = document.getElementById('filter-result').value;
+  const mon  = document.getElementById('filter-month').value;
+  const yr   = document.getElementById('filter-year').value;
+
+  filteredReports = allReports.filter(r => {
+    if (spec && r.specialist !== spec) return false;
+    if (res  && r.result !== res)      return false;
+    if (mon  && r.month  !== parseInt(mon)) return false;
+    if (yr   && r.year   !== parseInt(yr))  return false;
+    if (q && !r.id.toLowerCase().includes(q) &&
+             !r.site.toLowerCase().includes(q) &&
+             !r.specialist.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  currentPage = 1;
+  renderTable();
+}
+
+function resetFilters() {
+  document.getElementById('search-input').value = '';
+  ['filter-specialist','filter-result','filter-month','filter-year'].forEach(id => document.getElementById(id).value = '');
+  filteredReports = [...allReports];
+  currentPage = 1;
+  renderTable();
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = col; sortDir = 'asc'; }
+  document.querySelectorAll('[id^="sort-"]').forEach(el => el.textContent = '');
+  const el = document.getElementById('sort-' + col);
+  if (el) el.textContent = sortDir === 'asc' ? ' ↑' : ' ↓';
+  filteredReports.sort((a, b) => {
+    let va = a[col], vb = b[col];
+    if (typeof va === 'string') { va = va.toLowerCase(); vb = vb.toLowerCase(); }
+    const r = va < vb ? -1 : va > vb ? 1 : 0;
+    return sortDir === 'asc' ? r : -r;
+  });
+  currentPage = 1;
+  renderTable();
+}
+
+function renderTable() {
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const slice = filteredReports.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('report-tbody').innerHTML = slice.map(r => `
+    <tr>
+      <td style="font-family:monospace;font-size:11px;color:#aaa;">${r.id}</td>
+      <td style="font-weight:600;">${r.site}</td>
+      <td>${r.specialist}</td>
+      <td>${r.date}</td>
+      <td>${MONTHS_SHORT[r.month-1]}</td>
+      <td>${r.year}</td>
+      <td><span class="badge badge-${r.result==='ok'?'ok':'notok'}">${r.result==='ok'?'OK':'Not OK'}</span></td>
+      <td style="color:#aaa;">${r.photos} 📷</td>
+    </tr>`).join('');
+
+  const total = filteredReports.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+  const ok    = filteredReports.filter(r => r.result === 'ok').length;
+  const notok = filteredReports.filter(r => r.result === 'notok').length;
+
+  document.getElementById('filter-summary').innerHTML =
+    `<span class="chip chip-total">${total.toLocaleString()} reports</span>
+     <span class="chip chip-ok">${ok.toLocaleString()} OK</span>
+     <span class="chip chip-notok">${notok.toLocaleString()} Not OK</span>`;
+
+  document.getElementById('page-info').textContent =
+    `Showing ${(start+1).toLocaleString()}–${Math.min(start+PAGE_SIZE, total).toLocaleString()} of ${total.toLocaleString()} reports`;
+
+  // Pagination buttons
+  const btns = document.getElementById('page-btns');
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>←</button>`;
+  const range = [];
+  if (totalPages <= 7) { for (let i = 1; i <= totalPages; i++) range.push(i); }
+  else {
+    range.push(1);
+    if (currentPage > 3) range.push('…');
+    for (let i = Math.max(2, currentPage-1); i <= Math.min(totalPages-1, currentPage+1); i++) range.push(i);
+    if (currentPage < totalPages-2) range.push('…');
+    range.push(totalPages);
+  }
+  range.forEach(p => {
+    if (p === '…') html += `<span style="padding:0 4px;font-size:12px;color:#aaa;">…</span>`;
+    else html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+  });
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>→</button>`;
+  btns.innerHTML = html;
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filteredReports.length / PAGE_SIZE) || 1;
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTable();
+}
+
+// ── SPECIALISTS TABLE ─────────────────────────────────────────────────────
+
+function renderSpecialists() {
+  const year  = document.getElementById('spec-year').value;
+  const month = document.getElementById('spec-month').value;
+  const target = month ? 40 : year ? 480 : 480;
+
+  document.getElementById('spec-tbody').innerHTML = SPECIALIST_NAMES.map(name => {
+    const rpts = allReports.filter(r => {
+      if (r.specialist !== name) return false;
+      if (year  && r.year  !== parseInt(year))  return false;
+      if (month && r.month !== parseInt(month)) return false;
+      return true;
+    });
+    const visited = rpts.length;
+    const pct  = Math.min(Math.round((visited / target) * 100), 100);
+    const ok   = rpts.filter(r => r.result === 'ok').length;
+    const notok= rpts.filter(r => r.result === 'notok').length;
+    const ini  = name.split(' ').map(w => w[0]).join('').slice(0,2);
+    return `<tr>
+      <td><div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#E6F1FB;color:#185FA5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${ini}</div>
+        ${name}</div></td>
+      <td>${target.toLocaleString()}</td>
+      <td style="font-weight:700;color:#3B6D11;">${visited.toLocaleString()}</td>
+      <td><span class="badge badge-ok">${ok.toLocaleString()}</span></td>
+      <td><span class="badge badge-notok">${notok.toLocaleString()}</span></td>
+      <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-pct">${pct}%</span></div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── EXPORT ────────────────────────────────────────────────────────────────
+
+function runExport(type) {
+  const progEl = document.getElementById('prog-' + type);
+  const barEl  = document.getElementById('bar-' + type);
+  const lblEl  = document.getElementById('lbl-' + type);
+  progEl.style.display = 'block';
+  barEl.style.width = '5%';
+  lblEl.textContent = 'Preparing data...';
+
+  // small delay so UI updates before heavy work
+  setTimeout(() => {
+    if (type === 'xlsx') {
+      exportExcel(barEl, lblEl);
+    } else {
+      exportZip(barEl, lblEl);
+    }
+  }, 50);
+}
+
+function exportExcel(barEl, lblEl) {
+  try {
+    lblEl.textContent = 'Building worksheet...';
+    barEl.style.width = '20%';
+
+    const headers = [
+      'Report ID','FTAP ID','Site','Specialist','Date','Month','Year',
+      'Area','Province','Anchor MNO Site ID','No. of MNO',
+      'Purpose of Visit','Power Model','Overall Result',
+      'Root Cause Analysis','Final Recommendation','Photos'
+    ];
+
+    const rows = allReports.map(r => [
+      r.id,
+      r.ftapId || r.site || '',
+      r.site || '',
+      r.specialist,
+      r.date,
+      r.month,
+      r.year,
+      r.area || '',
+      r.province || '',
+      r.anchor || '',
+      r.mnoCount || '',
+      r.purpose || '',
+      r.powerModel || '',
+      r.result === 'ok' ? 'OK' : r.result === 'notok' ? 'Not OK' : 'N/A',
+      r.rca || '',
+      r.recommendation || '',
+      r.photos || 0
+    ]);
+
+    barEl.style.width = '60%';
+    lblEl.textContent = `Writing ${rows.length.toLocaleString()} rows...`;
+
+    const wsData = [headers, ...rows];
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // column widths
+    ws['!cols'] = headers.map((h, i) => ({ wch: [12,14,12,20,12,8,6,8,16,18,10,28,28,12,30,30,8][i] || 14 }));
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Site Visit Reports');
+
+    barEl.style.width = '90%';
+    lblEl.textContent = 'Generating file...';
+
+    XLSX.writeFile(wb, 'FTAP_SiteVisit_Reports.xlsx');
+
+    barEl.style.width = '100%';
+    lblEl.textContent = `✓ FTAP_SiteVisit_Reports.xlsx downloaded (${rows.length.toLocaleString()} reports)`;
+  } catch(e) {
+    lblEl.textContent = '✗ Export failed: ' + e.message;
+    barEl.style.width = '0%';
+  }
+}
+
+async function exportZip(barEl, lblEl) {
+  try {
+    if (typeof JSZip === 'undefined') {
+      lblEl.textContent = '✗ JSZip library not loaded. Check internet connection.';
+      return;
+    }
+
+    const zip = new JSZip();
+    const total = allReports.length;
+    lblEl.textContent = `Building CSV for ${total.toLocaleString()} reports...`;
+    barEl.style.width = '20%';
+
+    // Build CSV content
+    const headers = ['Report ID','FTAP ID','Site','Specialist','Date','Month','Year',
+      'Area','Province','Anchor MNO Site ID','No. of MNO','Purpose of Visit',
+      'Power Model','Overall Result','Root Cause Analysis','Final Recommendation','Photos'];
+
+    const escape = v => {
+      const s = String(v ?? '');
+      return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g,'""')}"` : s;
+    };
+
+    const csvLines = [
+      headers.map(escape).join(','),
+      ...allReports.map(r => [
+        r.id, r.ftapId || r.site || '', r.site || '', r.specialist,
+        r.date, r.month, r.year, r.area || '', r.province || '',
+        r.anchor || '', r.mnoCount || '', r.purpose || '', r.powerModel || '',
+        r.result === 'ok' ? 'OK' : r.result === 'notok' ? 'Not OK' : 'N/A',
+        r.rca || '', r.recommendation || '', r.photos || 0
+      ].map(escape).join(','))
+    ];
+
+    zip.file('reports.csv', csvLines.join('\n'));
+
+    barEl.style.width = '60%';
+    lblEl.textContent = 'Compressing...';
+
+    // Add a readme
+    zip.file('README.txt',
+      `FTAP Site Visit Reports Export\nGenerated: ${new Date().toLocaleString()}\nTotal Reports: ${total}\n\nContents:\n- reports.csv : All site visit report data\n`
+    );
+
+    barEl.style.width = '85%';
+    lblEl.textContent = 'Generating ZIP file...';
+
+    const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 6 } },
+      (meta) => {
+        barEl.style.width = Math.round(85 + meta.percent * 0.14) + '%';
+      }
+    );
+
+    // trigger download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'FTAP_SiteVisit_Reports.zip';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    barEl.style.width = '100%';
+    lblEl.textContent = `✓ FTAP_SiteVisit_Reports.zip downloaded (${total.toLocaleString()} reports)`;
+  } catch(e) {
+    lblEl.textContent = '✗ Export failed: ' + e.message;
+    barEl.style.width = '0%';
+  }
+}
+
+// ── GOOGLE SHEETS INTEGRATION ─────────────────────────────────────────────
+
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxK-2a_dN-MXPfyBMoMzgT153dsv9S3sq4G1p4bfB_6SD6q0CkKO3wDFxx3McoWt0hTBA/exec';
+
+async function saveReportToSheet(report) {
+  try {
+    const res = await fetch(WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'saveReport', report })
+    });
+    const json = await res.json();
+    return json.success === true;
+  } catch (e) {
+    console.error('Save to sheet failed:', e);
+    return false;
+  }
+}
+
+async function loadReportsFromSheet() {
+  try {
+    const res = await fetch(`${WEBAPP_URL}?action=getReports`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    const json = await res.json();
+    if (json.success && Array.isArray(json.reports)) {
+      return json.reports;
+    }
+    return [];
+  } catch (e) {
+    console.error('Load from sheet failed:', e);
+    return [];
+  }
+}
+
+
+
+function showToast(msg, duration) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  if (t._timer) clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, duration || 3500);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+
+generateReports();
+populateLoginDropdown();
+applyStoredTheme();
+
+</script>
+</body>
+</html>
